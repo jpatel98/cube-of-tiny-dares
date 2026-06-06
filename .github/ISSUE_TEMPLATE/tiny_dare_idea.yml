@@ -1,0 +1,30 @@
+name: Tiny dare idea
+description: Suggest a new dare, mode, or hardware behavior.
+title: "dare: "
+labels: [enhancement]
+body:
+  - type: textarea
+    id: idea
+    attributes:
+      label: What's the dare or feature?
+      placeholder: "When the user is overthinking, dare them to..."
+    validations:
+      required: true
+  - type: dropdown
+    id: vibe
+    attributes:
+      label: Vibe
+      options:
+        - useful
+        - funny
+        - spicy
+        - gentle
+        - cursed
+        - hardware
+    validations:
+      required: true
+  - type: textarea
+    id: why
+    attributes:
+      label: Why does it help someone move?
+      placeholder: "This works because..."

@@ -1,0 +1,48 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="bg" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(260 120) rotate(37) scale(980 760)">
+      <stop stop-color="#8338EC"/>
+      <stop offset="0.42" stop-color="#111827"/>
+      <stop offset="1" stop-color="#050510"/>
+    </radialGradient>
+    <linearGradient id="cube" x1="418" y1="134" x2="782" y2="498" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFB703"/>
+      <stop offset="0.55" stop-color="#FB8500"/>
+      <stop offset="1" stop-color="#EF476F"/>
+    </linearGradient>
+    <filter id="glow" x="292" y="24" width="616" height="616" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+      <feGaussianBlur in="BackgroundImageFix" stdDeviation="55"/>
+      <feComposite in2="SourceAlpha" operator="in" result="effect1_backgroundBlur_1_2"/>
+      <feBlend mode="normal" in="SourceGraphic" in2="effect1_backgroundBlur_1_2" result="shape"/>
+      <feGaussianBlur stdDeviation="18" result="effect2_foregroundBlur_1_2"/>
+    </filter>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <circle cx="100" cy="530" r="180" fill="#06D6A0" opacity="0.13"/>
+  <circle cx="1110" cy="80" r="240" fill="#FFB703" opacity="0.11"/>
+
+  <g filter="url(#glow)" opacity="0.75">
+    <rect x="410" y="116" width="380" height="380" rx="72" fill="#8338EC"/>
+  </g>
+
+  <rect x="410" y="116" width="380" height="380" rx="72" fill="url(#cube)" stroke="#FFFFFF" stroke-opacity="0.18" stroke-width="3"/>
+  <rect x="450" y="156" width="300" height="300" rx="52" fill="#09090F" fill-opacity="0.88"/>
+  <text x="600" y="282" text-anchor="middle" font-size="98" font-family="Apple Color Emoji, Segoe UI Emoji, Noto Color Emoji, sans-serif">🎲</text>
+  <text x="600" y="365" text-anchor="middle" fill="white" font-size="42" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-weight="900">TAP THE CUBE</text>
+  <text x="600" y="410" text-anchor="middle" fill="#C7D2FE" font-size="25" font-family="Inter, ui-sans-serif, system-ui, sans-serif">get one tiny dare</text>
+
+  <text x="600" y="558" text-anchor="middle" fill="white" font-size="72" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-weight="950">Cube of Tiny Dares</text>
+  <text x="600" y="600" text-anchor="middle" fill="#D1D5DB" font-size="26" font-family="Inter, ui-sans-serif, system-ui, sans-serif">simple, stupid, useful, cool</text>
+
+  <g opacity="0.9" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="25" font-weight="800">
+    <rect x="70" y="86" width="245" height="52" rx="26" fill="#111827" stroke="#FFFFFF" stroke-opacity="0.12"/>
+    <text x="192" y="121" text-anchor="middle" fill="#F9FAFB">Delete one feature</text>
+    <rect x="837" y="128" width="286" height="52" rx="26" fill="#111827" stroke="#FFFFFF" stroke-opacity="0.12"/>
+    <text x="980" y="163" text-anchor="middle" fill="#F9FAFB">Ship the fake version</text>
+    <rect x="78" y="432" width="282" height="52" rx="26" fill="#111827" stroke="#FFFFFF" stroke-opacity="0.12"/>
+    <text x="219" y="467" text-anchor="middle" fill="#F9FAFB">Ask one human</text>
+    <rect x="870" y="420" width="246" height="52" rx="26" fill="#111827" stroke="#FFFFFF" stroke-opacity="0.12"/>
+    <text x="993" y="455" text-anchor="middle" fill="#F9FAFB">Stop researching</text>
+  </g>
+</svg>

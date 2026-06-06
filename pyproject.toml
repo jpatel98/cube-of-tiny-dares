@@ -1,0 +1,35 @@
+[project]
+name = "cube-of-tiny-dares"
+version = "0.1.0"
+description = "A tiny AI appliance that gives one context-aware dare when tapped."
+readme = "README.md"
+requires-python = ">=3.11"
+license = "MIT"
+authors = [{ name = "Jigar Patel" }]
+keywords = ["gradio", "fastapi", "esp32", "hackathon", "ai-appliance"]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.11",
+]
+dependencies = [
+  "gradio>=6.16.0",
+  "fastapi>=0.111.0",
+  "uvicorn>=0.30.0",
+  "pydantic>=2.7.0",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.2.0"]
+
+[project.urls]
+Homepage = "https://github.com/jpatel98/cube-of-tiny-dares"
+Repository = "https://github.com/jpatel98/cube-of-tiny-dares"
+Issues = "https://github.com/jpatel98/cube-of-tiny-dares/issues"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+addopts = "-q"

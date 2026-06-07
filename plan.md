@@ -95,11 +95,12 @@ Gradio app / ESP32 -> POST /api/dare -> Modal SLM generator -> validated cube pa
 
 Implementation defaults:
 
-- Default model: `Qwen/Qwen2.5-3B-Instruct`, about 3B parameters and safely under the 32B hackathon limit.
+- Default model: `CohereLabs/c4ai-command-r7b-12-2024`, a 7B Cohere open-weights model safely under the 32B hackathon limit.
 - Modal surface: a custom JSON generator endpoint, not a full OpenAI-compatible server for v1.
 - App selector: `DARE_GENERATOR=auto|modal|local`, default `auto`.
 - Required Modal config: `MODAL_DARE_URL`.
 - Optional Modal config: `MODAL_DARE_TOKEN` if the endpoint is protected.
+- License note: Command R7B is listed on Hugging Face as `cc-by-nc-4.0`, so the submission should describe this as a hackathon/demo use case and avoid commercial-use claims.
 
 Modal request:
 

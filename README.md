@@ -85,8 +85,8 @@ Open:
 
 Live Space:
 
-- App: <https://jigarpatel-cube-of-tiny-dares.hf.space/>
-- Space repo: <https://huggingface.co/spaces/jigarpatel/cube-of-tiny-dares>
+- App: <https://build-small-hackathon-cube-of-tiny-dares.hf.space/>
+- Space repo: <https://huggingface.co/spaces/build-small-hackathon/cube-of-tiny-dares>
 
 ## ESP32 cube
 
@@ -191,7 +191,7 @@ Current target: a Backyard AI submission that demonstrates a tiny physical AI ap
 Live Hugging Face Space:
 
 ```text
-https://huggingface.co/spaces/jigarpatel/cube-of-tiny-dares
+https://huggingface.co/spaces/build-small-hackathon/cube-of-tiny-dares
 ```
 
 Before submitting:

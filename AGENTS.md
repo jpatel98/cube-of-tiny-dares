@@ -27,6 +27,28 @@ not a productivity platform.
 - Keep the README and Space metadata compatible with Hugging Face Spaces.
 - Submission work should support a short demo video and social post.
 
+## Sponsor Track Eligibility
+
+OpenAI Codex Track:
+
+- This project is intentionally being built with OpenAI Codex as the coding
+  agent.
+- Keep the public GitHub repo link visible in the Space README:
+  `https://github.com/jpatel98/cube-of-tiny-dares`.
+- The public repo must contain Codex-attributed commits before submission. Do
+  not rewrite, squash away, or remove those commits unless Jigar explicitly asks.
+- If creating new commits for submission work, prefer preserving clear Codex
+  attribution in the commit history.
+
+Modal Awards:
+
+- The current MVP is not Modal-powered.
+- Do not claim Modal eligibility unless a real Modal-backed component is added
+  and documented.
+- Modal usage should be load-bearing, such as an optional dare-generation
+  worker, tiny model endpoint, or hardware test job. Do not add Modal only as a
+  badge or empty dependency.
+
 ## Product Direction
 
 Treat the ESP32 cube path as required for the submission, not a throwaway bonus.

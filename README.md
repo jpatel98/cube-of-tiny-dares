@@ -67,7 +67,7 @@ context → tap → one tiny dare → move
 - 🔁 **Recent-dare avoidance** — avoids repeating the same dare immediately.
 - 🌈 **Cube payload** — each dare includes display text, emoji, color, and timer.
 - 🔌 **ESP32 cube contract** — hardware calls one simple HTTP endpoint.
-- ✅ **Tested core + API** — small enough to trust and modify.
+- ✅ **Backyard AI constraints respected** — deterministic dare engine with a single FastAPI endpoint, no account layer, no cloud model dependency in the MVP.
 
 ## Quick start
 
@@ -95,6 +95,13 @@ curl -sS -X POST http://localhost:7860/api/dare \
   -d '{"context":"I keep researching and cannot pick a direction"}'
 ```
 
+Optional request fields (JSON):
+
+- `mode`: `builder` (default), `hackathon`, `chaos goblin`, `gentle`
+- `intensity`: `gentle`, `medium` (default), `spicy`
+- `recent`: list of recent dare texts (used for dedupe)
+- `seed`: integer for deterministic output when re-testing
+
 Example response:
 
 ```json
@@ -117,7 +124,14 @@ Example response:
 }
 ```
 
-The cube only needs:
+The cube response includes:
+
+- `cube.display`
+- `cube.color`
+- `cube.timer_seconds`
+- optional: `cube.emoji`, `cube.speak`
+
+For ESP32, only these are required:
 
 - `cube.display`
 - `cube.color`
@@ -126,6 +140,13 @@ The cube only needs:
 See [`hardware/esp32_tiny_dares`](hardware/esp32_tiny_dares/) for the starter sketch.
 
 For the hackathon submission, the ESP32 path is part of the main demo, not a bonus. The web app should work alone, but the physical cube should be able to trigger the same `/api/dare` contract and show the dare text/color/timer.
+
+### Submission copy (Backyard AI)
+
+- Small, physical AI appliance that nudges you from analysis loops into action.
+- One control: context input + one tap = one dare.
+- No dashboard. No planning tool. No accounts. No productivity bloat.
+- Demonstrates a repeatable anti-overwhelm workflow for builders under real constraints.
 
 ## Hugging Face Spaces
 
@@ -155,6 +176,18 @@ Before submitting:
 - Configure the ESP32 sketch with the Space `/api/dare` endpoint.
 - Record a short demo showing web context input, cube tap, and ESP32 display/status output.
 - Explain the small-model/small-system constraint: the current MVP uses a local rules-based dare engine, so it has no external API or large-model dependency.
+
+### Sponsor track notes
+
+**OpenAI Codex Track:** this project is being built with OpenAI Codex as the coding agent. The public GitHub repo is:
+
+```text
+https://github.com/jpatel98/cube-of-tiny-dares
+```
+
+To stay eligible, the public repo should include at least one Codex-attributed commit before submission, and this repo link should remain visible in the Space README.
+
+**Modal Awards:** the current MVP does not use Modal runtime. It is not Modal-powered yet. To compete for Modal Awards, add a real Modal-backed part of the app, such as an optional dare-generation worker, tiny model endpoint, or hardware test job, and document exactly what Modal powers. Do not add Modal only as a badge; it should be load-bearing.
 
 ## Development
 
@@ -193,6 +226,13 @@ Please do **not** turn this into:
 - a wellness app
 
 The magic is that it is almost nothing.
+
+## 30-second demo script
+
+1. Open the web UI and type one short context line.
+2. Tap **TAP THE CUBE, GET ONE DARE, MOVE ⚡**.
+3. Trigger the ESP32 flow with the same context.
+4. Show the cube reading `cube.display`, `cube.color`, and `cube.timer_seconds` from `/api/dare`.
 
 ## Contributing
 

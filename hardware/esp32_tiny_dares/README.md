@@ -47,6 +47,34 @@ This project exposes `/api/dare` specifically so the cube can make **one simple 
 
 Install ArduinoJson from the Arduino Library Manager.
 
+## Recommended sketch wiring (generic)
+
+The sketch keeps I/O assumptions minimal so it can compile across common ESP32 boards:
+
+- Set `BUTTON_PIN` to a free GPIO for your physical trigger.
+- If your button is wired active-low (most common with INPUT_PULLUP), leave
+  `BUTTON_ACTIVE_LOW` as `true`.
+- If you wire it active-high, set `BUTTON_ACTIVE_LOW` to `false` and keep
+  `pinMode(BUTTON_PIN, INPUT_PULLDOWN)` (or match your wiring).
+- Compile with Serial enabled first to validate the endpoint and payload with
+  log output before adding a display.
+
+## Runtime checklist
+
+1. Configure:
+  - `WIFI_SSID`
+  - `WIFI_PASSWORD`
+  - `DARE_ENDPOINT`
+2. Fill in any display/touch hardware code inside `showDare()` only.
+3. Flash and open Serial Monitor at 115200.
+4. Press the button once. Confirm logs show:
+  - successful Wi‑Fi connect (or clear timeout message),
+  - HTTP status,
+  - `cube.display`, `cube.color`, and `cube.timer_seconds`.
+
+If those values print correctly, the wire protocol is ready for your physical
+cube display integration.
+
 ## Scope warning
 
 Do not start with audio recording or streaming. First version should be:

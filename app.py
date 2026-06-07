@@ -13,6 +13,7 @@ from tiny_dares.core import TinyDare, generate_dare, tiny_dare_to_markdown
 
 APP_TITLE = "Cube of Tiny Dares"
 APP_TAGLINE = "Tap the cube. Get one tiny dare. Move."
+DEMO_HOOK = "context → tap → one tiny dare → move"
 
 
 class DareApiRequest(BaseModel):
@@ -55,7 +56,7 @@ def _cube_card(dare: TinyDare) -> str:
   <div class="cube-emoji">{dare.emoji}</div>
   <div class="cube-title">{dare.text}</div>
   <div class="cube-why">{dare.why}</div>
-  <div class="cube-timer" style="background:{dare.color};">{dare.minutes} min dare</div>
+  <div class="cube-timer" style="background:{dare.color};">⏱ {dare.minutes} minute dare</div>
 </div>
 """
 
@@ -95,22 +96,34 @@ def gradio_tap(
 CSS = """
 body { background: #09090f; }
 .gradio-container { max-width: 980px !important; }
+#app-shell {
+  border: 1px solid #26263a;
+  border-radius: 12px;
+  padding: 18px;
+  background: #11111a;
+}
 #hero {
   text-align: center;
-  padding: 26px 18px 6px 18px;
+  padding: 16px 4px 12px 4px;
+  margin-bottom: 8px;
 }
 #hero h1 {
-  font-size: 3rem;
+  font-size: 2.6rem;
   line-height: 1.0;
-  margin-bottom: 0.35rem;
+  margin-bottom: 0.25rem;
 }
 #hero p {
   color: #b7b7c9;
   font-size: 1.08rem;
+  margin-top: 0;
+}
+#hero small {
+  color: #8e8ea4;
+  font-size: 0.92rem;
 }
 .cube-card {
   border: 2px solid #8338ec;
-  border-radius: 26px;
+  border-radius: 8px;
   padding: 30px;
   background: radial-gradient(circle at top left, #22223b 0%, #101018 42%, #08080d 100%);
   min-height: 290px;
@@ -122,14 +135,14 @@ body { background: #09090f; }
 }
 .cube-emoji { font-size: 4.4rem; margin-bottom: 14px; }
 .cube-title {
-  font-size: 2rem;
+  font-size: 1.95rem;
   line-height: 1.12;
   font-weight: 800;
   max-width: 720px;
 }
 .cube-why {
   color: #c9c9d8;
-  margin-top: 16px;
+  margin-top: 14px;
   font-size: 1.05rem;
   max-width: 680px;
 }
@@ -140,12 +153,19 @@ body { background: #09090f; }
   color: #08080d;
   font-weight: 800;
 }
+#cube-frame { border-radius: 8px; border: 1px solid #2d2d44; }
 #tap-button button {
-  font-size: 1.35rem;
+  font-size: 1.45rem;
   font-weight: 900;
-  min-height: 64px;
+  min-height: 84px;
+  border-radius: 10px;
 }
-.small-note { color: #a3a3b8; font-size: 0.95rem; }
+.small-note,
+.control-note {
+  color: #a3a3b8;
+  font-size: 0.95rem;
+  line-height: 1.3;
+}
 """
 
 
@@ -153,75 +173,86 @@ def build_demo() -> gr.Blocks:
     with gr.Blocks(title=APP_TITLE) as demo:
         recent_state = gr.State([])
 
-        gr.HTML(
-            f"""
-            <div id="hero">
-              <h1>🎲 {APP_TITLE}</h1>
-              <p>{APP_TAGLINE}</p>
-            </div>
-            """
-        )
+        with gr.Column(elem_id="app-shell"):
+            gr.HTML(
+                f"""
+                <div id="hero">
+                  <h1>🎲 {APP_TITLE}</h1>
+                  <p>{APP_TAGLINE}</p>
+                  <small>{DEMO_HOOK}</small>
+                </div>
+                """
+            )
 
-        with gr.Row():
-            with gr.Column(scale=5):
-                context = gr.Textbox(
-                    label="What is happening right now?",
-                    placeholder="e.g. I keep researching models and can't pick a direction...",
-                    lines=4,
+            context = gr.Textbox(
+                label="What loop are you in right now?",
+                placeholder="e.g. I keep researching models and can't pick a direction",
+                lines=4,
+            )
+            with gr.Row():
+                mode = gr.Dropdown(
+                    choices=["builder", "hackathon", "chaos goblin", "gentle"],
+                    value="builder",
+                    label="Mode",
+                    scale=1,
                 )
-                with gr.Row():
-                    mode = gr.Dropdown(
-                        choices=["builder", "hackathon", "chaos goblin", "gentle"],
-                        value="builder",
-                        label="Mode",
-                    )
-                    intensity = gr.Dropdown(
-                        choices=["gentle", "medium", "spicy"],
-                        value="medium",
-                        label="Intensity",
-                    )
-                tap = gr.Button("TAP THE CUBE", variant="primary", elem_id="tap-button")
-                gr.Markdown(
-                    "<span class='small-note'>Hardware path: ESP32 button can POST to `/api/dare` and display `cube.display` + `cube.color`.</span>"
+                intensity = gr.Dropdown(
+                    choices=["gentle", "medium", "spicy"],
+                    value="medium",
+                    label="Intensity",
+                    scale=1,
                 )
-            with gr.Column(scale=7):
-                cube = gr.HTML(
-                    _cube_card(
-                        TinyDare(
-                            text="Tell me what loop you're in, then tap.",
-                            why="The cube gives one tiny dare. No dashboard. No productivity cosplay.",
-                            emoji="🎲",
-                            color="#8338EC",
-                            minutes=5,
-                            label="idle",
-                        )
-                    )
-                )
+            tap = gr.Button(
+                "⚡ TAP CUBE, GET ONE DARE, MOVE ⚡",
+                variant="primary",
+                elem_id="tap-button",
+            )
+            gr.Markdown(
+                "<p class='control-note'>One tap = one dare. No dashboard, no accounts, no planning.</p>"
+            )
 
-        with gr.Row():
-            with gr.Column():
-                output = gr.Markdown(label="Dare card")
-            with gr.Column():
-                recent_display = gr.Markdown(
-                    value="_No dares yet. Tap the cube._",
-                    label="Recent dares",
-                )
+            with gr.Row():
+                with gr.Column(scale=6):
+                    cube = gr.HTML(
+                        _cube_card(
+                            TinyDare(
+                                text="Tell me what loop you're in, then tap.",
+                                why="The cube gives one tiny dare. No dashboard. No productivity cosplay.",
+                                emoji="🎲",
+                                color="#8338EC",
+                                minutes=5,
+                                label="idle",
+                            )
+                        ),
+                        elem_id="cube-frame",
+                    )
+                with gr.Column(scale=6):
+                    output = gr.Markdown(label="Dare")
+                    recent_display = gr.Markdown(
+                        value="_No dares yet. Tap the cube._",
+                        label="Recent dares",
+                    )
+
+            gr.Markdown(
+                "<span class='small-note'>Hardware path: ESP32 button can POST to <code>/api/dare</code> and read <code>cube.display</code> plus <code>cube.color</code>.</span>"
+            )
+
+            gr.Markdown("#### Try these starter loops:")
+            gr.Examples(
+                examples=[
+                    ["I keep researching models and can't pick a direction", "builder", "medium"],
+                    ["I want to add login and a dashboard before the demo", "hackathon", "spicy"],
+                    ["The deploy failed and I am randomly changing stuff", "builder", "medium"],
+                    ["I finished a tiny fix but don't know what to do next", "gentle", "gentle"],
+                ],
+                inputs=[context, mode, intensity],
+            )
 
         tap.click(
             fn=gradio_tap,
             inputs=[context, mode, intensity, recent_state],
             outputs=[output, cube, recent_state, recent_display],
             api_name="tap",
-        )
-
-        gr.Examples(
-            examples=[
-                ["I keep researching models and can't pick a direction", "builder", "medium"],
-                ["I want to add login and a dashboard before the demo", "hackathon", "spicy"],
-                ["The deploy failed and I am randomly changing stuff", "builder", "medium"],
-                ["I finished a tiny fix but don't know what to do next", "gentle", "gentle"],
-            ],
-            inputs=[context, mode, intensity],
         )
 
     return demo
@@ -247,5 +278,6 @@ app = gr.mount_gradio_app(api, demo, path="/", css=CSS, theme=Soft())
 if __name__ == "__main__":
     import uvicorn
 
+    host = os.environ.get("HOST", "0.0.0.0")
     port = int(os.environ.get("PORT", "7860"))
-    uvicorn.run(app, host="0.0.0.0", port=port)
+    uvicorn.run(app, host=host, port=port)

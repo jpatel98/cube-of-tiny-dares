@@ -31,6 +31,16 @@ The loop:
 - [ ] Submission copy explaining the Backyard AI fit.
 - [ ] Optional: tiny TTS line for the dare.
 
+### Hackathon readiness blockers (this sprint)
+
+- [ ] Finalize the Space app URL and run `/api/health` + `/api/dare` against the hosted endpoint.
+- [ ] Verify one physical cube trigger path that posts context and renders `cube.display`, `cube.color`, `cube.timer_seconds`.
+- [ ] Produce a 30–60 second demo video that includes both web tap and cube hardware behavior.
+- [ ] Finalize final submission text (identity + track alignment + limitations + one concrete next-step dare).
+- [ ] Confirm the public GitHub repo contains a Codex-attributed commit for the OpenAI Codex Track.
+- [ ] Keep the GitHub repo link visible in the Space README.
+- [ ] Decide whether to add a real Modal-powered component; current MVP is not Modal-powered.
+
 ## Non-goals
 
 - No user accounts.
@@ -50,6 +60,11 @@ The loop:
 5. Press the ESP32 cube button/touch input.
 6. Show the cube calling `/api/dare` and displaying the same dare text/color/timer.
 
+Recommended demo narration:
+
+- "I’m over-researching and stuck. Context in, one tap, one dare, and then I can move."
+- "This is the anti-overengineering loop breaker for builders, not a dashboard."
+
 ## Hardware path
 
 The ESP32 path is required for the submission. Keep it simple and reliable.
@@ -67,8 +82,19 @@ Do not make the cube call Gradio event endpoints. The dedicated FastAPI endpoint
 ## Next build steps
 
 1. Polish the Gradio UI for a clean one-minute demo.
-2. Verify `/api/health` and `/api/dare` locally with Python 3.11.
+2. Verify `/api/health` and `/api/dare` locally with Python 3.11 and the current `/api/dare` payload fields.
 3. Update the ESP32 sketch for the actual board, button pin, display, and Space/local endpoint.
 4. Test the ESP32 against the local app.
 5. Deploy to Hugging Face Space.
 6. Record the demo video and prepare submission/social copy.
+
+## Submission copy (ready to paste)
+
+- **One sentence pitch:** A tiny AI appliance that turns builder analysis paralysis into one concrete action by letting you enter your loop and immediately receive one dare.
+- **Track fit:** Built for Backyard AI: small, physical, specific, and built for motion not management.
+- **Submission guardrails:** No accounts, no tasks, no dashboards, no wellness or SaaS surface.
+
+## Sponsor track eligibility
+
+- **OpenAI Codex Track:** eligible once the public GitHub repo includes Codex-attributed commits and the repo URL is included in the Space README.
+- **Modal Awards:** not eligible yet. The app needs a real Modal-powered component before claiming this.

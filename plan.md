@@ -1,8 +1,10 @@
-# Cube of Tiny Dares — Build Plan
+# Cube of Tiny Dares — Hackathon Build Plan
 
 ## Goal
 
-Build a tiny Gradio + ESP32-friendly hackathon project: a physical/web cube that gives one context-aware dare whenever tapped.
+Build a tiny Gradio + ESP32 hackathon project: a physical/web cube that gives one context-aware dare whenever tapped.
+
+This is a Hugging Face Build Small Hackathon submission for the **Backyard AI** track. The project should solve a real builder problem: getting unstuck when the next useful step is smaller than the plan in your head.
 
 ## Product principle
 
@@ -23,8 +25,10 @@ The loop:
 - [x] Recent-dare avoidance so it does not repeat immediately.
 - [x] README with HF Space metadata.
 - [x] ESP32 integration notes.
-- [ ] Optional: deploy to Hugging Face Space.
-- [ ] Optional: physical cube display/button integration.
+- [ ] Deploy to Hugging Face Space.
+- [ ] Physical ESP32 cube display/button integration.
+- [ ] Demo video showing web app + ESP32 cube behavior.
+- [ ] Submission copy explaining the Backyard AI fit.
 - [ ] Optional: tiny TTS line for the dare.
 
 ## Non-goals
@@ -34,7 +38,8 @@ The loop:
 - No task database.
 - No long chat history.
 - No complex hardware streaming.
-- No full LLM dependency for v1.
+- No full chatbot behavior.
+- No model larger than the hackathon's small-model limit.
 
 ## Demo script
 
@@ -42,11 +47,14 @@ The loop:
 2. Type: `I keep researching models and can't pick a direction`.
 3. Tap **TAP THE CUBE**.
 4. App/cube returns: `Stop researching for 20 minutes. Build the dumbest visible version.`
-5. Show `/api/dare` response for ESP32 integration.
+5. Press the ESP32 cube button/touch input.
+6. Show the cube calling `/api/dare` and displaying the same dare text/color/timer.
 
 ## Hardware path
 
-The ESP32 only needs to:
+The ESP32 path is required for the submission. Keep it simple and reliable.
+
+The cube only needs to:
 
 1. Connect to Wi-Fi.
 2. Detect a button/touch event.
@@ -54,4 +62,13 @@ The ESP32 only needs to:
 4. Read `cube.display`, `cube.color`, and `cube.timer_seconds`.
 5. Show the dare on LCD and/or color/status.
 
-If hardware gets annoying, submit the Gradio app first and treat ESP32 as a bonus demo.
+Do not make the cube call Gradio event endpoints. The dedicated FastAPI endpoint is the hardware contract.
+
+## Next build steps
+
+1. Polish the Gradio UI for a clean one-minute demo.
+2. Verify `/api/health` and `/api/dare` locally with Python 3.11.
+3. Update the ESP32 sketch for the actual board, button pin, display, and Space/local endpoint.
+4. Test the ESP32 against the local app.
+5. Deploy to Hugging Face Space.
+6. Record the demo video and prepare submission/social copy.

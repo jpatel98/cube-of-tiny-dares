@@ -30,6 +30,8 @@ python_version: "3.11"
 
 **Cube of Tiny Dares** is a tiny AI-appliance-shaped hackathon project for getting unstuck.
 
+It is built for the Hugging Face Build Small Hackathon as a **Backyard AI** project: a small, specific tool for a real builder problem. When you are researching too long, adding one more feature, or randomly debugging instead of moving, the cube gives one concrete dare.
+
 You tell it what loop you are in. You tap the cube. It gives **one tiny dare**:
 
 - “Delete one feature.”
@@ -64,7 +66,7 @@ context → tap → one tiny dare → move
 - 🧠 **Context-aware dare engine** — no API key required for MVP.
 - 🔁 **Recent-dare avoidance** — avoids repeating the same dare immediately.
 - 🌈 **Cube payload** — each dare includes display text, emoji, color, and timer.
-- 🔌 **ESP32-friendly API** — hardware calls one simple HTTP endpoint.
+- 🔌 **ESP32 cube contract** — hardware calls one simple HTTP endpoint.
 - ✅ **Tested core + API** — small enough to trust and modify.
 
 ## Quick start
@@ -81,7 +83,7 @@ Open:
 - Web UI: <http://localhost:7860>
 - Health: <http://localhost:7860/api/health>
 
-## API for hardware
+## ESP32 cube
 
 The ESP32 does **not** need to know anything about Gradio.
 
@@ -123,6 +125,8 @@ The cube only needs:
 
 See [`hardware/esp32_tiny_dares`](hardware/esp32_tiny_dares/) for the starter sketch.
 
+For the hackathon submission, the ESP32 path is part of the main demo, not a bonus. The web app should work alone, but the physical cube should be able to trigger the same `/api/dare` contract and show the dare text/color/timer.
+
 ## Hugging Face Spaces
 
 This repo is ready for a Gradio Space.
@@ -139,6 +143,18 @@ To deploy manually:
 2. Select **Gradio**.
 3. Push this repo to the Space.
 4. The app should boot from `app.py`.
+
+## Hackathon readiness
+
+Current target: a Backyard AI submission that demonstrates a tiny physical AI appliance for builder momentum.
+
+Before submitting:
+
+- Deploy the Gradio app to a Hugging Face Space.
+- Verify `GET /api/health` and `POST /api/dare` on the Space.
+- Configure the ESP32 sketch with the Space `/api/dare` endpoint.
+- Record a short demo showing web context input, cube tap, and ESP32 display/status output.
+- Explain the small-model/small-system constraint: the current MVP uses a local rules-based dare engine, so it has no external API or large-model dependency.
 
 ## Development
 
@@ -160,7 +176,7 @@ python3 -m py_compile app.py tiny_dares/core.py
 app.py                         # FastAPI + Gradio app
 tiny_dares/core.py             # tiny dare generator
 tests/                         # pytest tests
-hardware/esp32_tiny_dares/     # optional ESP32 notes/sketch
+hardware/esp32_tiny_dares/     # ESP32 notes/sketch
 assets/social-card.svg         # repo/social preview art
 plan.md                        # build plan / scope guard
 ```

@@ -97,6 +97,9 @@ or wellness product.
 - `tests/test_app.py` covers the API payload contract.
 - `hardware/esp32_tiny_dares/` contains the ESP32 integration notes and starter
   Arduino sketch.
+- `hardware/waveshare_tiny_dares/` contains the real Waveshare ESP32-S3 Touch
+  LCD firmware adapted from AgentGotchi, including touch, display, provisioning,
+  and embedded pet sprites.
 - `plan.md` is the current build plan and scope guard.
 
 ## Testing

@@ -21,7 +21,7 @@ class TinyDare:
 
 DARE_BANK: tuple[TinyDare, ...] = (
     TinyDare(
-        text="Stop researching for 20 minutes. Build the dumbest visible version.",
+        text="Stop researching. Build the dumbest visible version.",
         why="More input will not pick the idea for you. A visible fake will.",
         emoji="🧪",
         color="#FFB703",
@@ -29,7 +29,7 @@ DARE_BANK: tuple[TinyDare, ...] = (
         label="research_loop",
     ),
     TinyDare(
-        text="Pick one option by timer. You get 5 minutes, not a philosophy degree.",
+        text="Pick one option. No more comparing.",
         why="A small irreversible choice creates more signal than another comparison pass.",
         emoji="⏳",
         color="#FB8500",
@@ -37,7 +37,7 @@ DARE_BANK: tuple[TinyDare, ...] = (
         label="research_loop",
     ),
     TinyDare(
-        text="Delete one feature. If the demo still works, it was not core.",
+        text="Delete one feature. Keep the demo alive.",
         why="Scope creep hides as ambition. Cut until the thing has one sharp edge.",
         emoji="✂️",
         color="#EF476F",
@@ -45,7 +45,7 @@ DARE_BANK: tuple[TinyDare, ...] = (
         label="scope_creep",
     ),
     TinyDare(
-        text="Ship the fake version first. Make the button lie convincingly.",
+        text="Ship the fake version first.",
         why="A believable demo teaches you what the real system actually needs.",
         emoji="🎭",
         color="#8338EC",
@@ -53,7 +53,7 @@ DARE_BANK: tuple[TinyDare, ...] = (
         label="scope_creep",
     ),
     TinyDare(
-        text="Ask one human to try the ugly version today.",
+        text="Ask one person to try the ugly version.",
         why="A confused person is more useful than a perfect private prototype.",
         emoji="👀",
         color="#06D6A0",
@@ -61,7 +61,7 @@ DARE_BANK: tuple[TinyDare, ...] = (
         label="shipping",
     ),
     TinyDare(
-        text="Write the update like it already shipped. Then make only that true.",
+        text="Write the shipped update. Make only that true.",
         why="The announcement reveals the smallest complete version.",
         emoji="📣",
         color="#118AB2",
@@ -69,7 +69,7 @@ DARE_BANK: tuple[TinyDare, ...] = (
         label="shipping",
     ),
     TinyDare(
-        text="Explain the bug out loud in one sentence. Touch no code until you can.",
+        text="Explain the bug in one sentence.",
         why="Naming the failure usually shrinks it.",
         emoji="🦆",
         color="#FFD166",
@@ -77,7 +77,7 @@ DARE_BANK: tuple[TinyDare, ...] = (
         label="debugging",
     ),
     TinyDare(
-        text="Reproduce the failure once. Screenshot/log it. Then change one thing.",
+        text="Reproduce it once. Change one thing.",
         why="Random fixes create fog. One captured failure creates a trail.",
         emoji="🔍",
         color="#3A86FF",
@@ -85,7 +85,7 @@ DARE_BANK: tuple[TinyDare, ...] = (
         label="debugging",
     ),
     TinyDare(
-        text="Make one tiny visible change before opening another tab.",
+        text="Make one visible change before another tab.",
         why="Momentum returns through output, not browsing.",
         emoji="🧱",
         color="#8AC926",
@@ -93,7 +93,7 @@ DARE_BANK: tuple[TinyDare, ...] = (
         label="stuck",
     ),
     TinyDare(
-        text="Write the next action on screen. Do exactly that, nothing else.",
+        text="Write the next action. Do only that.",
         why="A narrow instruction beats a heroic plan.",
         emoji="🎯",
         color="#7209B7",
@@ -101,7 +101,7 @@ DARE_BANK: tuple[TinyDare, ...] = (
         label="stuck",
     ),
     TinyDare(
-        text="Do a 7-minute reset. Come back and remove, not add.",
+        text="Take a reset. Come back and remove.",
         why="Tired brains invent features to avoid finishing.",
         emoji="🌙",
         color="#577590",
@@ -109,7 +109,7 @@ DARE_BANK: tuple[TinyDare, ...] = (
         label="tired",
     ),
     TinyDare(
-        text="Create the 30-second demo path. Ignore every screen outside it.",
+        text="Create the demo path. Ignore everything else.",
         why="A hackathon project is judged through the demo path first.",
         emoji="⚡",
         color="#F15BB5",
@@ -197,6 +197,5 @@ def tiny_dare_to_markdown(dare: TinyDare) -> str:
     return (
         f"# {dare.emoji} {dare.text}\n\n"
         f"**Why:** {dare.why}\n\n"
-        f"**Timer:** {dare.minutes} min\n\n"
         f"**Cube color:** `{dare.color}`\n"
     )

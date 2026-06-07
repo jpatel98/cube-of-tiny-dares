@@ -56,7 +56,6 @@ def _cube_card(dare: TinyDare) -> str:
   <div class="cube-emoji">{dare.emoji}</div>
   <div class="cube-title">{dare.text}</div>
   <div class="cube-why">{dare.why}</div>
-  <div class="cube-timer" style="background:{dare.color};">⏱ {dare.minutes} minute dare</div>
 </div>
 """
 
@@ -145,13 +144,6 @@ body { background: #09090f; }
   margin-top: 14px;
   font-size: 1.05rem;
   max-width: 680px;
-}
-.cube-timer {
-  margin-top: 22px;
-  padding: 8px 14px;
-  border-radius: 999px;
-  color: #08080d;
-  font-weight: 800;
 }
 #cube-frame { border-radius: 8px; border: 1px solid #2d2d44; }
 #tap-button button {

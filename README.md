@@ -37,7 +37,7 @@ You tell it what loop you are in. You tap the cube. It gives **one tiny dare**:
 - “Delete one feature.”
 - “Ship the fake version first.”
 - “Ask one human to try the ugly version today.”
-- “Stop researching for 20 minutes.”
+- “Stop researching. Build the dumbest visible version.”
 
 No dashboard. No productivity cosplay. No account system. Just a playful physical nudge toward motion.
 
@@ -55,17 +55,17 @@ context → tap → one tiny dare → move
 
 | Context | Tiny dare |
 | --- | --- |
-| “I keep researching models and can't pick a direction.” | “Stop researching for 20 minutes. Build the dumbest visible version.” |
-| “I want to add login before the demo.” | “Delete one feature. If the demo still works, it was not core.” |
-| “The deploy failed and I am randomly changing stuff.” | “Reproduce the failure once. Screenshot/log it. Then change one thing.” |
-| “I finished a tiny fix but don't know what to do next.” | “Ask one human to try the ugly version today.” |
+| “I keep researching models and can't pick a direction.” | “Stop researching. Build the dumbest visible version.” |
+| “I want to add login before the demo.” | “Delete one feature. Keep the demo alive.” |
+| “The deploy failed and I am randomly changing stuff.” | “Reproduce it once. Change one thing.” |
+| “I finished a tiny fix but don't know what to do next.” | “Ask one person to try the ugly version.” |
 
 ## Features
 
 - 🎲 **One-button Gradio app** — type context, tap the cube.
 - 🧠 **Context-aware dare engine** — no API key required for MVP.
 - 🔁 **Recent-dare avoidance** — avoids repeating the same dare immediately.
-- 🌈 **Cube payload** — each dare includes display text, emoji, color, and timer.
+- 🌈 **Cube payload** — each dare includes display text, emoji, color, and timer seconds.
 - 🔌 **ESP32 cube contract** — hardware calls one simple HTTP endpoint.
 - ✅ **Backyard AI constraints respected** — deterministic dare engine with a single FastAPI endpoint, no account layer, no cloud model dependency in the MVP.
 
@@ -107,7 +107,7 @@ Example response:
 ```json
 {
   "dare": {
-    "text": "Stop researching for 20 minutes. Build the dumbest visible version.",
+    "text": "Stop researching. Build the dumbest visible version.",
     "why": "More input will not pick the idea for you. A visible fake will.",
     "emoji": "🧪",
     "color": "#FFB703",
@@ -115,7 +115,7 @@ Example response:
     "label": "research_loop"
   },
   "cube": {
-    "display": "Stop researching for 20 minutes. Build the dumbest visible version.",
+    "display": "Stop researching. Build the dumbest visible version.",
     "emoji": "🧪",
     "color": "#FFB703",
     "timer_seconds": 1200,
@@ -137,9 +137,19 @@ For ESP32, only these are required:
 - `cube.color`
 - `cube.timer_seconds`
 
-See [`hardware/esp32_tiny_dares`](hardware/esp32_tiny_dares/) for the starter sketch.
+See [`hardware/esp32_tiny_dares`](hardware/esp32_tiny_dares/) for the minimal
+protocol sketch.
 
-For the hackathon submission, the ESP32 path is part of the main demo, not a bonus. The web app should work alone, but the physical cube should be able to trigger the same `/api/dare` contract and show the dare text/color/timer.
+The real Waveshare ESP32-S3 Touch LCD firmware path is now
+[`hardware/waveshare_tiny_dares`](hardware/waveshare_tiny_dares/). It vendors
+the AgentGotchi display/touch/sprite firmware base so the physical cube can keep
+the existing pet visual, and it has been adapted to post to `/api/dare` on
+screen tap or KEY press. The flashed UI intentionally stays simple: one title,
+one pet sprite, the dare text, and the dare accent color. The API still includes
+`cube.timer_seconds` for compatibility, but the current device screen does not
+show a countdown.
+
+For the hackathon submission, the ESP32 path is part of the main demo, not a bonus. The web app should work alone, but the physical cube should be able to trigger the same `/api/dare` contract and show the dare text/color.
 
 ### Submission copy (Backyard AI)
 
@@ -173,7 +183,7 @@ Before submitting:
 
 - Deploy the Gradio app to a Hugging Face Space.
 - Verify `GET /api/health` and `POST /api/dare` on the Space.
-- Configure the ESP32 sketch with the Space `/api/dare` endpoint.
+- Configure the Waveshare firmware with the Space `/api/dare` endpoint.
 - Record a short demo showing web context input, cube tap, and ESP32 display/status output.
 - Explain the small-model/small-system constraint: the current MVP uses a local rules-based dare engine, so it has no external API or large-model dependency.
 
@@ -209,7 +219,8 @@ python3 -m py_compile app.py tiny_dares/core.py
 app.py                         # FastAPI + Gradio app
 tiny_dares/core.py             # tiny dare generator
 tests/                         # pytest tests
-hardware/esp32_tiny_dares/     # ESP32 notes/sketch
+hardware/esp32_tiny_dares/     # minimal ESP32 protocol sketch
+hardware/waveshare_tiny_dares/ # real Waveshare ESP32-S3 firmware base
 assets/social-card.svg         # repo/social preview art
 plan.md                        # build plan / scope guard
 ```
@@ -231,8 +242,8 @@ The magic is that it is almost nothing.
 
 1. Open the web UI and type one short context line.
 2. Tap **TAP THE CUBE, GET ONE DARE, MOVE ⚡**.
-3. Trigger the ESP32 flow with the same context.
-4. Show the cube reading `cube.display`, `cube.color`, and `cube.timer_seconds` from `/api/dare`.
+3. Tap the ESP32 cube.
+4. Show the cube reading `cube.display` and `cube.color` from `/api/dare`.
 
 ## Contributing
 

@@ -19,7 +19,7 @@ def test_api_dare_returns_cube_payload():
 
     assert payload["dare"]["text"]
     assert payload["dare"]["color"].startswith("#")
-    assert payload["cube"]["display"] == payload["dare"]["text"]
+    assert len(payload["cube"]["display"]) <= 72
     assert payload["cube"]["color"] == payload["dare"]["color"]
     assert "Why" in payload["markdown"]
 

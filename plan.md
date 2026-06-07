@@ -25,8 +25,10 @@ The loop:
 - [x] Recent-dare avoidance so it does not repeat immediately.
 - [x] README with HF Space metadata.
 - [x] ESP32 integration notes.
+- [x] Copy Waveshare ESP32-S3 Touch LCD firmware base and AgentGotchi sprites.
+- [x] Adapt Waveshare firmware to call `/api/dare` and render a dare.
 - [ ] Deploy to Hugging Face Space.
-- [ ] Physical ESP32 cube display/button integration.
+- [x] Physical ESP32 cube display/touch/button integration.
 - [ ] Demo video showing web app + ESP32 cube behavior.
 - [ ] Submission copy explaining the Backyard AI fit.
 - [ ] Modal SLM generator for fresh dares, with local fallback.
@@ -58,7 +60,7 @@ The loop:
 1. Open app.
 2. Type: `I keep researching models and can't pick a direction`.
 3. Tap **TAP THE CUBE**.
-4. App/cube returns: `Stop researching for 20 minutes. Build the dumbest visible version.`
+4. App/cube returns: `Stop researching. Build the dumbest visible version.`
 5. Press the ESP32 cube button/touch input.
 6. Show the cube calling `/api/dare` and displaying the same dare text/color/timer.
 
@@ -71,13 +73,23 @@ Recommended demo narration:
 
 The ESP32 path is required for the submission. Keep it simple and reliable.
 
+There are two hardware folders:
+
+- `hardware/esp32_tiny_dares/` is the minimal protocol reference sketch.
+- `hardware/waveshare_tiny_dares/` is the real Waveshare ESP32-S3 Touch LCD
+  firmware base copied from AgentGotchi, including the pet sprite assets.
+
 The cube only needs to:
 
 1. Connect to Wi-Fi.
 2. Detect a button/touch event.
 3. POST context JSON to `/api/dare`.
 4. Read `cube.display`, `cube.color`, and `cube.timer_seconds`.
-5. Show the dare on LCD and/or color/status.
+5. Show the dare text and accent color on LCD.
+
+Current flashed UI keeps the screen intentionally sparse: title, one existing
+AgentGotchi pet sprite, dare text, and border/accent color. `cube.timer_seconds`
+stays in the API for compatibility but is not shown on the physical screen.
 
 Do not make the cube call Gradio event endpoints. The dedicated FastAPI endpoint is the hardware contract.
 
@@ -149,7 +161,7 @@ The ESP32 contract does not change. The cube still reads only:
 4. Verify `/api/health` and `/api/dare` locally with Python 3.11 and the current `/api/dare` payload fields.
 5. Update README submission copy to explain that Modal powers fresh SLM-generated dares.
 6. Deploy to Hugging Face Space with `MODAL_DARE_URL` configured.
-7. Update the ESP32 sketch endpoint for the actual Space/local URL and test the physical trigger.
+7. Update the firmware endpoint for the actual Space/local URL and test the physical trigger.
 8. Record the demo video and prepare submission/social copy.
 
 ## Submission copy (ready to paste)

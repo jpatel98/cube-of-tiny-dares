@@ -41,4 +41,4 @@ def test_markdown_is_demo_friendly():
 
     assert dare.text in markdown
     assert "Why" in markdown
-    assert "Timer" in markdown
+    assert "Cube color" in markdown

@@ -3,7 +3,7 @@ title: Cube of Tiny Dares
 emoji: 🎲
 colorFrom: purple
 colorTo: yellow
-sdk: gradio
+sdk: docker
 app_file: app.py
 pinned: false
 license: mit
@@ -83,6 +83,11 @@ Open:
 - Web UI: <http://localhost:7860>
 - Health: <http://localhost:7860/api/health>
 
+Live Space:
+
+- App: <https://jigarpatel-cube-of-tiny-dares.hf.space/>
+- Space repo: <https://huggingface.co/spaces/jigarpatel/cube-of-tiny-dares>
+
 ## ESP32 cube
 
 The ESP32 does **not** need to know anything about Gradio.
@@ -160,9 +165,13 @@ For the hackathon submission, the ESP32 path is part of the main demo, not a bon
 
 ## Hugging Face Spaces
 
-This repo is ready for a Gradio Space.
+This repo is ready for a Hugging Face Space.
 
-The README contains the required Spaces metadata frontmatter, and the app entrypoint is:
+The README contains the required Spaces metadata frontmatter. The Space uses a
+small Docker wrapper so the Gradio UI and custom FastAPI hardware endpoints are
+served by the same ASGI app.
+
+The app entrypoint is:
 
 ```text
 app.py
@@ -171,17 +180,23 @@ app.py
 To deploy manually:
 
 1. Create a new Hugging Face Space.
-2. Select **Gradio**.
+2. Select **Docker**.
 3. Push this repo to the Space.
-4. The app should boot from `app.py`.
+4. The container should boot `uvicorn app:app` from `Dockerfile`.
 
 ## Hackathon readiness
 
 Current target: a Backyard AI submission that demonstrates a tiny physical AI appliance for builder momentum.
 
+Live Hugging Face Space:
+
+```text
+https://huggingface.co/spaces/jigarpatel/cube-of-tiny-dares
+```
+
 Before submitting:
 
-- Deploy the Gradio app to a Hugging Face Space.
+- Deploy the app to a Hugging Face Space.
 - Verify `GET /api/health` and `POST /api/dare` on the Space.
 - Configure the Waveshare firmware with the Space `/api/dare` endpoint.
 - Record a short demo showing web context input, cube tap, and ESP32 display/status output.

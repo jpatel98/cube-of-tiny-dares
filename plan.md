@@ -27,7 +27,7 @@ The loop:
 - [x] ESP32 integration notes.
 - [x] Copy Waveshare ESP32-S3 Touch LCD firmware base and AgentGotchi sprites.
 - [x] Adapt Waveshare firmware to call `/api/dare` and render a dare.
-- [ ] Deploy to Hugging Face Space.
+- [x] Deploy to Hugging Face Space.
 - [x] Physical ESP32 cube display/touch/button integration.
 - [ ] Demo video showing web app + ESP32 cube behavior.
 - [ ] Submission copy explaining the Backyard AI fit.
@@ -36,7 +36,7 @@ The loop:
 
 ### Hackathon readiness blockers (this sprint)
 
-- [ ] Finalize the Space app URL and run `/api/health` + `/api/dare` against the hosted endpoint.
+- [x] Finalize the Space app URL and run `/api/health` + `/api/dare` against the hosted endpoint.
 - [ ] Verify one physical cube trigger path that posts context and renders `cube.display`, `cube.color`, `cube.timer_seconds`.
 - [ ] Produce a 30–60 second demo video that includes both web tap and cube hardware behavior.
 - [ ] Finalize final submission text (identity + track alignment + limitations + one concrete next-step dare).
@@ -155,14 +155,14 @@ The ESP32 contract does not change. The cube still reads only:
 
 ## Next build steps
 
-1. Add the Modal SLM generator endpoint and deploy it with `modal deploy`.
-2. Wire `/api/dare` to call Modal first when configured, then fall back to the local dare bank.
-3. Add tests for Modal success, Modal failure fallback, invalid output fallback, and unchanged cube payload shape.
-4. Verify `/api/health` and `/api/dare` locally with Python 3.11 and the current `/api/dare` payload fields.
-5. Update README submission copy to explain that Modal powers fresh SLM-generated dares.
-6. Deploy to Hugging Face Space with `MODAL_DARE_URL` configured.
-7. Update the firmware endpoint for the actual Space/local URL and test the physical trigger.
-8. Record the demo video and prepare submission/social copy.
+1. Update the firmware endpoint to the live Space URL and test the physical trigger.
+2. Record the demo video and prepare submission/social copy.
+3. Add the Modal SLM generator endpoint and deploy it with `modal deploy`.
+4. Wire `/api/dare` to call Modal first when configured, then fall back to the local dare bank.
+5. Add tests for Modal success, Modal failure fallback, invalid output fallback, and unchanged cube payload shape.
+6. Verify `/api/health` and `/api/dare` locally and on the hosted Space.
+7. Update README submission copy to explain that Modal powers fresh SLM-generated dares.
+8. Redeploy to Hugging Face Space with `MODAL_DARE_URL` configured.
 
 ## Submission copy (ready to paste)
 

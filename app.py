@@ -267,7 +267,7 @@ demo = build_demo()
 app = gr.mount_gradio_app(api, demo, path="/", css=CSS, theme=Soft())
 
 
-if __name__ == "__main__":
+if __name__ == "__main__" and not os.environ.get("SPACE_ID"):
     import uvicorn
 
     host = os.environ.get("HOST", "0.0.0.0")

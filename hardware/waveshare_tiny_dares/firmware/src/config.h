@@ -38,7 +38,7 @@
 
 // Default Tiny Dares API endpoint. Override this in the captive portal after
 // Wi-Fi provisioning, or point it at the hosted Hugging Face Space.
-#define DEFAULT_DARE_ENDPOINT  "http://192.168.2.113:7860/api/dare"
+#define DEFAULT_DARE_ENDPOINT  "https://build-small-hackathon-cube-of-tiny-dares.hf.space/api/dare"
 #define DEFAULT_DARE_CONTEXT   "I am stuck and need a tiny dare"
 
 // Open-Meteo — weather. No API key, no rate limit hassle for low-poll use.

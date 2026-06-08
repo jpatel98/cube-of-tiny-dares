@@ -12,7 +12,8 @@ bool storageLoad(AppConfig& out) {
   out.intensity   = prefs.getString(NVS_KEY_INTENSITY,   "medium");
   prefs.end();
   if (out.dare_url.length() == 0 ||
-      out.dare_url == "http://192.168.4.2:7860/api/dare") {
+      out.dare_url == "http://192.168.4.2:7860/api/dare" ||
+      out.dare_url == "http://192.168.2.113:7860/api/dare") {
     out.dare_url = DEFAULT_DARE_ENDPOINT;
   }
   // Always returns true; emptiness is meaningful but not an error.

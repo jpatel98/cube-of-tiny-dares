@@ -154,6 +154,12 @@ one pet sprite, the dare text, and the dare accent color. The API still includes
 `cube.timer_seconds` for compatibility, but the current device screen does not
 show a countdown.
 
+The default Waveshare firmware endpoint is the live hackathon Space API:
+
+```text
+https://build-small-hackathon-cube-of-tiny-dares.hf.space/api/dare
+```
+
 For the hackathon submission, the ESP32 path is part of the main demo, not a bonus. The web app should work alone, but the physical cube should be able to trigger the same `/api/dare` contract and show the dare text/color.
 
 ### Submission copy (Backyard AI)
@@ -198,7 +204,7 @@ Before submitting:
 
 - Deploy the app to a Hugging Face Space.
 - Verify `GET /api/health` and `POST /api/dare` on the Space.
-- Configure the Waveshare firmware with the Space `/api/dare` endpoint.
+- Verify the Waveshare firmware can fetch a dare from the live Space endpoint.
 - Record a short demo showing web context input, cube tap, and ESP32 display/status output.
 - Explain the small-model/small-system constraint: the current MVP uses a local rules-based dare engine, so it has no external API or large-model dependency.
 

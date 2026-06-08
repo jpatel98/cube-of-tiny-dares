@@ -37,7 +37,7 @@ The loop:
 ### Hackathon readiness blockers (this sprint)
 
 - [x] Finalize the Space app URL and run `/api/health` + `/api/dare` against the hosted endpoint.
-- [ ] Verify one physical cube trigger path that posts context and renders `cube.display`, `cube.color`, `cube.timer_seconds`.
+- [ ] Verify one physical cube trigger path against the live Space endpoint that posts context and renders `cube.display`, `cube.color`, `cube.timer_seconds`.
 - [ ] Produce a 30–60 second demo video that includes both web tap and cube hardware behavior.
 - [ ] Finalize final submission text (identity + track alignment + limitations + one concrete next-step dare).
 - [ ] Confirm the public GitHub repo contains a Codex-attributed commit for the OpenAI Codex Track.
@@ -155,7 +155,7 @@ The ESP32 contract does not change. The cube still reads only:
 
 ## Next build steps
 
-1. Update the firmware endpoint to the live Space URL and test the physical trigger.
+1. Confirm the flashed cube fetches a dare from the live Space endpoint.
 2. Record the demo video and prepare submission/social copy.
 3. Add the Modal SLM generator endpoint and deploy it with `modal deploy`.
 4. Wire `/api/dare` to call Modal first when configured, then fall back to the local dare bank.

@@ -56,6 +56,9 @@ The firmware has been adapted to Cube of Tiny Dares behavior:
   `TinyDares-setup` if no saved network is available.
 - Provisioning accepts the Tiny Dares `/api/dare` endpoint, default context,
   mode, and intensity.
+- The default endpoint is the live Build Small Hackathon Space:
+  `https://build-small-hackathon-cube-of-tiny-dares.hf.space/api/dare`.
+- Saved old local endpoints are migrated back to the live default on boot.
 - A screen tap or KEY press posts JSON to `/api/dare`.
 - The display renders `cube.display` and `cube.color` with one AgentGotchi pet
   sprite.
@@ -107,9 +110,11 @@ cd firmware
 pio run -t upload --upload-port /dev/cu.usbmodem101
 ```
 
-After flashing, connect to the `TinyDares-setup` Wi-Fi portal and set the
-endpoint to the hosted or local app URL, for example:
+After flashing, the default endpoint is:
 
 ```text
-http://<computer-or-space-host>/api/dare
+https://build-small-hackathon-cube-of-tiny-dares.hf.space/api/dare
 ```
+
+To override it, connect to the `TinyDares-setup` Wi-Fi portal and set a local or
+alternate hosted `/api/dare` URL.

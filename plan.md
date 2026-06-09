@@ -31,7 +31,7 @@ The loop:
 - [x] Physical ESP32 cube display/touch/button integration.
 - [ ] Demo video showing web app + ESP32 cube behavior.
 - [ ] Submission copy explaining the Backyard AI fit.
-- [ ] Modal SLM generator for fresh dares, with local fallback.
+- [x] Modal SLM generator scaffold for fresh dares, with local fallback.
 - [ ] Optional: tiny TTS line for the dare.
 
 ### Hackathon readiness blockers (this sprint)
@@ -42,7 +42,8 @@ The loop:
 - [ ] Finalize final submission text (identity + track alignment + limitations + one concrete next-step dare).
 - [ ] Confirm the public GitHub repo contains a Codex-attributed commit for the OpenAI Codex Track.
 - [ ] Keep the GitHub repo link visible in the Space README.
-- [ ] Add and deploy the Modal SLM dare generator so Modal is a real load-bearing component.
+- [x] Wire `/api/dare` to an optional Modal/Cohere SLM generator with local fallback.
+- [ ] Deploy the Modal SLM dare generator and configure the hosted Space so Modal is a real load-bearing component.
 
 ## Non-goals
 
@@ -155,23 +156,21 @@ The ESP32 contract does not change. The cube still reads only:
 
 ## Next build steps
 
-1. Confirm the flashed cube fetches a dare from the live Space endpoint.
-2. Record the demo video and prepare submission/social copy.
-3. Add the Modal SLM generator endpoint and deploy it with `modal deploy`.
-4. Wire `/api/dare` to call Modal first when configured, then fall back to the local dare bank.
-5. Add tests for Modal success, Modal failure fallback, invalid output fallback, and unchanged cube payload shape.
-6. Verify `/api/health` and `/api/dare` locally and on the hosted Space.
-7. Update README submission copy to explain that Modal powers fresh SLM-generated dares.
-8. Redeploy to Hugging Face Space with `MODAL_DARE_URL` configured.
+1. Deploy the Modal SLM generator endpoint with `modal deploy`.
+2. Configure the Hugging Face Space with `DARE_GENERATOR=auto` and `MODAL_DARE_URL`.
+3. Verify `/api/health` and `/api/dare` locally and on the hosted Space.
+4. Confirm the flashed cube fetches a dare from the live Space endpoint.
+5. Record the demo video and prepare submission/social copy.
+6. Update submission copy to say Modal powers fresh SLM-generated dares after the hosted Modal path is verified.
 
 ## Submission copy (ready to paste)
 
-- **One sentence pitch:** A tiny AI appliance that uses a small model on Modal to turn builder analysis paralysis into one concrete action.
+- **One sentence pitch:** A tiny AI appliance that can use a small model on Modal to turn builder analysis paralysis into one concrete action.
 - **Track fit:** Built for Backyard AI: small, physical, specific, and built for motion not management.
-- **Modal fit:** Modal powers the fresh SLM-generated dare path; the local dare bank remains a fallback for reliability.
+- **Modal fit:** Once deployed, Modal powers the fresh SLM-generated dare path; the local dare bank remains a fallback for reliability.
 - **Submission guardrails:** No accounts, no tasks, no dashboards, no wellness or SaaS surface.
 
 ## Sponsor track eligibility
 
 - **OpenAI Codex Track:** eligible once the public GitHub repo includes Codex-attributed commits and the repo URL is included in the Space README.
-- **Modal Awards:** target eligibility by making the Modal SLM generator the primary fresh-dare path and documenting exactly what Modal powers.
+- **Modal Awards:** target eligibility by deploying the Modal SLM generator, configuring the Space to use it, verifying it live, and documenting exactly what Modal powers.

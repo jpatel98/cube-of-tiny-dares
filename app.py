@@ -9,6 +9,7 @@ from fastapi import FastAPI
 from pydantic import BaseModel, Field
 
 from tiny_dares.core import TinyDare, generate_dare, tiny_dare_to_markdown
+from tiny_dares.modal_client import ModalDareError, fetch_modal_dare, modal_configured
 
 
 APP_TITLE = "Cube of Tiny Dares"
@@ -39,15 +40,34 @@ def make_cube_payload(dare: TinyDare, markdown: str) -> dict[str, Any]:
 
 
 def create_dare_payload(request: DareApiRequest) -> dict[str, Any]:
-    dare = generate_dare(
+    dare = generate_dare_for_request(request)
+    markdown = tiny_dare_to_markdown(dare)
+    return make_cube_payload(dare, markdown)
+
+
+def generate_dare_for_request(request: DareApiRequest) -> TinyDare:
+    generator = os.environ.get("DARE_GENERATOR", "auto").strip().lower()
+    if generator not in {"auto", "modal", "local"}:
+        generator = "auto"
+
+    if generator in {"auto", "modal"} and modal_configured():
+        try:
+            return fetch_modal_dare(
+                context=request.context,
+                mode=request.mode,
+                intensity=request.intensity,
+                recent=request.recent,
+            )
+        except ModalDareError:
+            pass
+
+    return generate_dare(
         request.context,
         mode=request.mode,
         intensity=request.intensity,
         recent=request.recent,
         seed=request.seed,
     )
-    markdown = tiny_dare_to_markdown(dare)
-    return make_cube_payload(dare, markdown)
 
 
 def _cube_card(dare: TinyDare) -> str:

@@ -32,6 +32,8 @@ bool tinyDaresFetch(
   const char* context,
   const char* mode,
   const char* intensity,
+  const String* recent,
+  uint8_t recent_count,
   TinyDarePayload& out
 ) {
   out = TinyDarePayload();
@@ -51,6 +53,10 @@ bool tinyDaresFetch(
   request["context"] = cleanText(context, DEFAULT_DARE_CONTEXT, 180);
   request["mode"] = cleanText(mode, "builder", 24);
   request["intensity"] = cleanText(intensity, "medium", 24);
+  JsonArray recent_json = request["recent"].to<JsonArray>();
+  for (uint8_t i = 0; i < recent_count; ++i) {
+    if (recent[i].length() > 0) recent_json.add(recent[i]);
+  }
 
   String body;
   serializeJson(request, body);

@@ -152,7 +152,8 @@ the existing pet visual, and it has been adapted to post to `/api/dare` on
 screen tap or KEY press. The flashed UI intentionally stays simple: one title,
 one pet sprite, the dare text, and the dare accent color. The API still includes
 `cube.timer_seconds` for compatibility, but the current device screen does not
-show a countdown.
+show a countdown. The firmware also sends recent successful dare texts so
+back-to-back taps do not keep returning the same dare.
 
 The default Waveshare firmware endpoint is the live hackathon Space API:
 

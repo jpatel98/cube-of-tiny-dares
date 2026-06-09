@@ -16,5 +16,7 @@ bool tinyDaresFetch(
   const char* context,
   const char* mode,
   const char* intensity,
+  const String* recent,
+  uint8_t recent_count,
   TinyDarePayload& out
 );

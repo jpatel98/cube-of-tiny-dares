@@ -22,6 +22,30 @@ static AppConfig g_cfg;
 static DareViewState g_view;
 static uint32_t g_last_fetch_ms = 0;
 static bool g_fetching = false;
+static constexpr uint8_t RECENT_DARE_MAX = 6;
+static String g_recent_dares[RECENT_DARE_MAX];
+static uint8_t g_recent_dare_count = 0;
+
+static void rememberDare(const String& text) {
+  if (text.length() == 0) return;
+
+  for (uint8_t i = 0; i < g_recent_dare_count; ++i) {
+    if (g_recent_dares[i] == text) {
+      for (uint8_t j = i; j > 0; --j) {
+        g_recent_dares[j] = g_recent_dares[j - 1];
+      }
+      g_recent_dares[0] = text;
+      return;
+    }
+  }
+
+  uint8_t limit = g_recent_dare_count < RECENT_DARE_MAX ? g_recent_dare_count : RECENT_DARE_MAX - 1;
+  for (uint8_t i = limit; i > 0; --i) {
+    g_recent_dares[i] = g_recent_dares[i - 1];
+  }
+  g_recent_dares[0] = text;
+  if (g_recent_dare_count < RECENT_DARE_MAX) ++g_recent_dare_count;
+}
 
 static void setIdleView() {
   g_view.status = DARE_IDLE;
@@ -89,11 +113,14 @@ static void fetchDare() {
     g_cfg.context.c_str(),
     g_cfg.mode.c_str(),
     g_cfg.intensity.c_str(),
+    g_recent_dares,
+    g_recent_dare_count,
     dare
   );
 
   if (ok) {
     Serial.printf("[dare] %s\n", dare.text.c_str());
+    rememberDare(dare.text);
     setReadyView(dare);
     audioPlay(AUDIO_CUE_NOTE);
   } else {

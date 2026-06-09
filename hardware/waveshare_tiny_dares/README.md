@@ -60,6 +60,8 @@ The firmware has been adapted to Cube of Tiny Dares behavior:
   `https://build-small-hackathon-cube-of-tiny-dares.hf.space/api/dare`.
 - Saved old local endpoints are migrated back to the live default on boot.
 - A screen tap or KEY press posts JSON to `/api/dare`.
+- The firmware keeps the last few successful dare texts in RAM and sends them
+  as `recent` so repeated taps avoid immediate repeats.
 - The display renders `cube.display` and `cube.color` with one AgentGotchi pet
   sprite.
 - `cube.timer_seconds` is still accepted as part of the API contract, but the
@@ -72,7 +74,10 @@ The firmware request body is:
 {
   "context": "I am stuck and need a tiny dare",
   "mode": "builder",
-  "intensity": "medium"
+  "intensity": "medium",
+  "recent": [
+    "Stop researching. Build the dumbest visible version."
+  ]
 }
 ```
 

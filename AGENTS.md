@@ -42,12 +42,13 @@ OpenAI Codex Track:
 
 Modal Awards:
 
-- The current MVP is not Modal-powered.
-- Do not claim Modal eligibility unless a real Modal-backed component is added
-  and documented.
-- Modal usage should be load-bearing, such as an optional dare-generation
-  worker, tiny model endpoint, or hardware test job. Do not add Modal only as a
-  badge or empty dependency.
+- The intended live submission path is Modal-powered through the Cohere dare
+  generator.
+- Do not claim full Modal eligibility unless the Modal endpoint is deployed,
+  configured on the Hugging Face Space, verified live, and documented.
+- Modal usage should be load-bearing: the Space should call the Modal/Cohere
+  generator first, with the local dare bank only as a reliability fallback. Do
+  not add Modal only as a badge or empty dependency.
 
 ## Product Direction
 

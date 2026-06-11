@@ -31,7 +31,7 @@ The loop:
 - [x] Physical ESP32 cube display/touch/button integration.
 - [ ] Demo video showing web app + ESP32 cube behavior.
 - [ ] Submission copy explaining the Backyard AI fit.
-- [x] Modal SLM generator scaffold for fresh dares, with local fallback.
+- [x] Modal/Cohere SLM generator scaffold for fresh dares, with local fallback.
 - [ ] Optional: tiny TTS line for the dare.
 
 ### Hackathon readiness blockers (this sprint)
@@ -42,7 +42,7 @@ The loop:
 - [ ] Finalize final submission text (identity + track alignment + limitations + one concrete next-step dare).
 - [ ] Confirm the public GitHub repo contains a Codex-attributed commit for the OpenAI Codex Track.
 - [ ] Keep the GitHub repo link visible in the Space README.
-- [x] Wire `/api/dare` to an optional Modal/Cohere SLM generator with local fallback.
+- [x] Wire `/api/dare` to a Modal/Cohere SLM generator with local fallback and visible generation metadata.
 - [ ] Deploy the Modal SLM dare generator and configure the hosted Space so Modal is a real load-bearing component.
 
 ## Non-goals
@@ -110,7 +110,7 @@ Implementation defaults:
 
 - Default model: `CohereLabs/c4ai-command-r7b-12-2024`, a 7B Cohere open-weights model safely under the 32B hackathon limit.
 - Modal surface: a custom JSON generator endpoint, not a full OpenAI-compatible server for v1.
-- App selector: `DARE_GENERATOR=auto|modal|local`, default `auto`.
+- App selector: `DARE_GENERATOR=auto|modal|local`, default `modal`.
 - Required Modal config: `MODAL_DARE_URL`.
 - Optional Modal config: `MODAL_DARE_TOKEN` if the endpoint is protected.
 - License note: Command R7B is listed on Hugging Face as `cc-by-nc-4.0`, so the submission should describe this as a hackathon/demo use case and avoid commercial-use claims.
@@ -154,10 +154,16 @@ The ESP32 contract does not change. The cube still reads only:
 - `cube.color`
 - `cube.timer_seconds`
 
+The API also returns top-level `generation` metadata for judges and the web UI:
+
+- `generation.provider`: `modal` or `local`
+- `generation.model`: active model or fallback engine
+- `generation.fallback`: whether the local path handled a Modal-intended request
+
 ## Next build steps
 
 1. Deploy the Modal SLM generator endpoint with `modal deploy`.
-2. Configure the Hugging Face Space with `DARE_GENERATOR=auto` and `MODAL_DARE_URL`.
+2. Configure the Hugging Face Space with `DARE_GENERATOR=modal` and `MODAL_DARE_URL`.
 3. Verify `/api/health` and `/api/dare` locally and on the hosted Space.
 4. Confirm the flashed cube fetches a dare from the live Space endpoint.
 5. Record the demo video and prepare submission/social copy.
@@ -165,7 +171,7 @@ The ESP32 contract does not change. The cube still reads only:
 
 ## Submission copy (ready to paste)
 
-- **One sentence pitch:** A tiny AI appliance that can use a small model on Modal to turn builder analysis paralysis into one concrete action.
+- **One sentence pitch:** A tiny AI appliance that uses a small model on Modal to turn builder analysis paralysis into one concrete action.
 - **Track fit:** Built for Backyard AI: small, physical, specific, and built for motion not management.
 - **Modal fit:** Once deployed, Modal powers the fresh SLM-generated dare path; the local dare bank remains a fallback for reliability.
 - **Submission guardrails:** No accounts, no tasks, no dashboards, no wellness or SaaS surface.
@@ -174,3 +180,4 @@ The ESP32 contract does not change. The cube still reads only:
 
 - **OpenAI Codex Track:** eligible once the public GitHub repo includes Codex-attributed commits and the repo URL is included in the Space README.
 - **Modal Awards:** target eligibility by deploying the Modal SLM generator, configuring the Space to use it, verifying it live, and documenting exactly what Modal powers.
+- **Tiny Titan:** not targeted with the current Cohere 7B model because Tiny Titan requires 4B parameters or smaller.

@@ -8,6 +8,14 @@ app_file: app.py
 pinned: false
 license: mit
 python_version: "3.11"
+tags:
+  - gradio
+  - backyard-ai
+  - openai-codex
+  - modal
+  - best-demo
+  - off-brand
+  - esp32
 ---
 
 <div align="center">
@@ -63,12 +71,12 @@ context → tap → one tiny dare → move
 ## Features
 
 - 🎲 **One-button Gradio app** — type context, tap the cube.
-- 🧠 **Context-aware dare engine** — no API key required for MVP.
-- 🧩 **Optional Modal/Cohere generator** — can call a Modal-hosted `CohereLabs/c4ai-command-r7b-12-2024` endpoint when configured, with local fallback.
+- 🧠 **Modal/Cohere-powered dare engine** — `CohereLabs/c4ai-command-r7b-12-2024` generates fresh dares on Modal when configured.
+- 🧩 **Local reliability fallback** — the tiny local dare bank keeps the Space and ESP32 demo working if Modal is unavailable.
 - 🔁 **Recent-dare avoidance** — avoids repeating the same dare immediately.
 - 🌈 **Cube payload** — each dare includes display text, emoji, color, and timer seconds.
 - 🔌 **ESP32 cube contract** — hardware calls one simple HTTP endpoint.
-- ✅ **Backyard AI constraints respected** — deterministic local fallback with a single FastAPI endpoint, no account layer, and optional small-model generation.
+- ✅ **Backyard AI constraints respected** — small-model generation, deterministic fallback, one FastAPI endpoint, no account layer.
 
 ## Quick start
 
@@ -88,6 +96,9 @@ Live Space:
 
 - App: <https://build-small-hackathon-cube-of-tiny-dares.hf.space/>
 - Space repo: <https://huggingface.co/spaces/build-small-hackathon/cube-of-tiny-dares>
+- Public GitHub repo: <https://github.com/jpatel98/cube-of-tiny-dares>
+- Demo video: TODO — add the 30-60 second demo link before submission.
+- Social post: TODO — add the public social post link before submission.
 
 ## ESP32 cube
 
@@ -120,6 +131,11 @@ Example response:
     "minutes": 20,
     "label": "research_loop"
   },
+  "generation": {
+    "provider": "modal",
+    "model": "CohereLabs/c4ai-command-r7b-12-2024",
+    "fallback": false
+  },
   "cube": {
     "display": "Stop researching. Build the dumbest visible version.",
     "emoji": "🧪",
@@ -136,6 +152,10 @@ The cube response includes:
 - `cube.color`
 - `cube.timer_seconds`
 - optional: `cube.emoji`, `cube.speak`
+
+The top-level `generation` object is for the web app, README, and judges. It
+shows whether the dare came from Modal + Cohere or from the local fallback. The
+ESP32 contract does not depend on it.
 
 For ESP32, only these are required:
 
@@ -192,10 +212,10 @@ To deploy manually:
 3. Push this repo to the Space.
 4. The container should boot `uvicorn app:app` from `Dockerfile`.
 
-## Optional Modal/Cohere generator
+## Modal/Cohere-powered generator
 
-The app works without Modal. By default, `/api/dare` uses the local dare bank
-unless a Modal endpoint is configured.
+The intended live submission path uses Modal as the primary generator and keeps
+the local dare bank as a reliability fallback.
 
 For the Modal Awards track, the intended load-bearing path is:
 
@@ -212,7 +232,7 @@ account must have model access and Modal needs an `HF_TOKEN` secret.
 Local app environment:
 
 ```bash
-export DARE_GENERATOR=auto
+export DARE_GENERATOR=modal
 export MODAL_DARE_URL="https://your-modal-endpoint.example/dare"
 ```
 
@@ -231,7 +251,7 @@ modal secret create huggingface-secret HF_TOKEN=...
 modal deploy modal_dare_generator.py
 ```
 
-After deploy, set `DARE_GENERATOR=auto` and `MODAL_DARE_URL` on the Hugging Face
+After deploy, set `DARE_GENERATOR=modal` and `MODAL_DARE_URL` on the Hugging Face
 Space. If Modal is slow, unavailable, returns invalid JSON, or repeats a recent
 dare, the app falls back to the local generator so the web app and ESP32 demo
 still work.
@@ -252,7 +272,7 @@ Before submitting:
 - Verify `GET /api/health` and `POST /api/dare` on the Space.
 - Verify the Waveshare firmware can fetch a dare from the live Space endpoint.
 - Record a short demo showing web context input, cube tap, and ESP32 display/status output.
-- Explain the small-model/small-system constraint: the app has a local fallback, and the optional Modal path uses a small Cohere model under the hackathon limit.
+- Explain the small-model/small-system constraint: the primary live path uses a small Cohere model on Modal under the hackathon limit, and the local fallback keeps the cube reliable.
 
 ### Sponsor track notes
 
@@ -264,7 +284,9 @@ https://github.com/jpatel98/cube-of-tiny-dares
 
 To stay eligible, the public repo should include at least one Codex-attributed commit before submission, and this repo link should remain visible in the Space README.
 
-**Modal Awards:** this repo now includes an optional Modal/Cohere dare generator and `/api/dare` can call it when `MODAL_DARE_URL` is configured. Do not claim full Modal eligibility until the Modal endpoint is deployed, the Hugging Face Space has the Modal URL configured, and the demo verifies that Modal is powering fresh dare generation with local fallback.
+**Modal Awards:** this repo includes a Modal/Cohere dare generator and `/api/dare` can call it when `MODAL_DARE_URL` is configured. Do not claim full Modal eligibility until the Modal endpoint is deployed, the Hugging Face Space has the Modal URL configured, and the demo verifies that Modal is powering fresh dare generation with local fallback.
+
+**Tiny Titan:** not targeted for the current submission because the Cohere 7B model is above the Tiny Titan 4B limit.
 
 ## Development
 
@@ -285,7 +307,7 @@ python3 -m py_compile app.py tiny_dares/core.py
 ```text
 app.py                         # FastAPI + Gradio app
 tiny_dares/core.py             # tiny dare generator
-tiny_dares/modal_client.py     # optional Modal endpoint client + validation
+tiny_dares/modal_client.py     # Modal endpoint client + validation
 modal_dare_generator.py        # Modal-hosted Cohere SLM endpoint
 tests/                         # pytest tests
 hardware/esp32_tiny_dares/     # minimal ESP32 protocol sketch

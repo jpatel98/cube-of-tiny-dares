@@ -24,6 +24,10 @@ def test_api_dare_returns_cube_payload():
     assert payload["dare"]["color"].startswith("#")
     assert len(payload["cube"]["display"]) <= 72
     assert payload["cube"]["color"] == payload["dare"]["color"]
+    assert payload["cube"]["timer_seconds"] == payload["dare"]["minutes"] * 60
+    assert payload["generation"]["provider"] == "local"
+    assert payload["generation"]["model"] == "tiny-dares-local-rule-bank"
+    assert payload["generation"]["fallback"] is True
     assert "Why" in payload["markdown"]
 
 
@@ -73,6 +77,13 @@ def test_api_uses_modal_generator_when_configured(monkeypatch):
     payload = response.json()
     assert payload["dare"]["text"] == "Make the hosted demo say one true thing."
     assert payload["cube"]["display"] == payload["dare"]["text"]
+    assert payload["cube"]["color"] == payload["dare"]["color"]
+    assert payload["cube"]["timer_seconds"] == payload["dare"]["minutes"] * 60
+    assert payload["generation"] == {
+        "provider": "modal",
+        "model": "CohereLabs/c4ai-command-r7b-12-2024",
+        "fallback": False,
+    }
 
 
 def test_api_falls_back_when_modal_fails(monkeypatch):
@@ -95,3 +106,25 @@ def test_api_falls_back_when_modal_fails(monkeypatch):
     payload = response.json()
     assert payload["dare"]["text"]
     assert payload["cube"]["display"] == payload["dare"]["text"]
+    assert payload["cube"]["color"] == payload["dare"]["color"]
+    assert payload["cube"]["timer_seconds"] == payload["dare"]["minutes"] * 60
+    assert payload["generation"]["provider"] == "local"
+    assert payload["generation"]["model"] == "tiny-dares-local-rule-bank"
+    assert payload["generation"]["fallback"] is True
+
+
+def test_api_local_mode_reports_non_fallback_local(monkeypatch):
+    client = TestClient(app)
+
+    monkeypatch.setenv("DARE_GENERATOR", "local")
+    monkeypatch.setenv("MODAL_DARE_URL", "https://example.invalid/dare")
+
+    response = client.post(
+        "/api/dare",
+        json={"context": "I keep researching models", "seed": 1},
+    )
+
+    assert response.status_code == 200
+    payload = response.json()
+    assert payload["generation"]["provider"] == "local"
+    assert payload["generation"]["fallback"] is False

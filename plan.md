@@ -43,7 +43,8 @@ The loop:
 - [ ] Confirm the public GitHub repo contains a Codex-attributed commit for the OpenAI Codex Track.
 - [ ] Keep the GitHub repo link visible in the Space README.
 - [x] Wire `/api/dare` to a Modal/Cohere SLM generator with local fallback and visible generation metadata.
-- [ ] Deploy the Modal SLM dare generator and configure the hosted Space so Modal is a real load-bearing component.
+- [x] Deploy the Modal SLM dare generator and configure the hosted Space so Modal is a real load-bearing component.
+- [x] Verify hosted `/api/dare` returns `generation.provider: "modal"` and `generation.fallback: false`.
 
 ## Non-goals
 
@@ -162,22 +163,20 @@ The API also returns top-level `generation` metadata for judges and the web UI:
 
 ## Next build steps
 
-1. Deploy the Modal SLM generator endpoint with `modal deploy`.
-2. Configure the Hugging Face Space with `DARE_GENERATOR=modal` and `MODAL_DARE_URL`.
-3. Verify `/api/health` and `/api/dare` locally and on the hosted Space.
-4. Confirm the flashed cube fetches a dare from the live Space endpoint.
-5. Record the demo video and prepare submission/social copy.
-6. Update submission copy to say Modal powers fresh SLM-generated dares after the hosted Modal path is verified.
+1. Confirm the flashed cube fetches a dare from the live Space endpoint.
+2. Record the demo video and prepare submission/social copy.
+3. Add the demo video link and social post link to the README placeholders.
+4. Final-check `/api/health` and `/api/dare` before submission.
 
 ## Submission copy (ready to paste)
 
 - **One sentence pitch:** A tiny AI appliance that uses a small model on Modal to turn builder analysis paralysis into one concrete action.
 - **Track fit:** Built for Backyard AI: small, physical, specific, and built for motion not management.
-- **Modal fit:** Once deployed, Modal powers the fresh SLM-generated dare path; the local dare bank remains a fallback for reliability.
+- **Modal fit:** Modal powers the fresh SLM-generated dare path; the local dare bank remains a fallback for reliability.
 - **Submission guardrails:** No accounts, no tasks, no dashboards, no wellness or SaaS surface.
 
 ## Sponsor track eligibility
 
 - **OpenAI Codex Track:** eligible once the public GitHub repo includes Codex-attributed commits and the repo URL is included in the Space README.
-- **Modal Awards:** target eligibility by deploying the Modal SLM generator, configuring the Space to use it, verifying it live, and documenting exactly what Modal powers.
+- **Modal Awards:** target eligibility is now supported by the deployed Modal/Cohere generator, Space configuration, and live `generation.provider: "modal"` verification.
 - **Tiny Titan:** not targeted with the current Cohere 7B model because Tiny Titan requires 4B parameters or smaller.

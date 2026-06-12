@@ -233,7 +233,7 @@ Local app environment:
 
 ```bash
 export DARE_GENERATOR=modal
-export MODAL_DARE_URL="https://your-modal-endpoint.example/dare"
+export MODAL_DARE_URL="https://axion-technologies--dare.modal.run"
 ```
 
 Optional endpoint bearer token:
@@ -251,10 +251,22 @@ modal secret create huggingface-secret HF_TOKEN=...
 modal deploy modal_dare_generator.py
 ```
 
-After deploy, set `DARE_GENERATOR=modal` and `MODAL_DARE_URL` on the Hugging Face
-Space. If Modal is slow, unavailable, returns invalid JSON, or repeats a recent
-dare, the app falls back to the local generator so the web app and ESP32 demo
-still work.
+The hackathon Space is configured with `DARE_GENERATOR=modal` and the deployed
+Modal endpoint at `https://axion-technologies--dare.modal.run`. If Modal is
+slow, unavailable, returns invalid JSON, or repeats a recent dare, the app falls
+back to the local generator so the web app and ESP32 demo still work.
+
+Live verification:
+
+```json
+{
+  "generation": {
+    "provider": "modal",
+    "model": "CohereLabs/c4ai-command-r7b-12-2024",
+    "fallback": false
+  }
+}
+```
 
 ## Hackathon readiness
 
@@ -269,7 +281,7 @@ https://huggingface.co/spaces/build-small-hackathon/cube-of-tiny-dares
 Before submitting:
 
 - Deploy the app to a Hugging Face Space.
-- Verify `GET /api/health` and `POST /api/dare` on the Space.
+- Verify `GET /api/health` and `POST /api/dare` on the Space. Current hosted `/api/dare` verification returns `generation.provider: "modal"`.
 - Verify the Waveshare firmware can fetch a dare from the live Space endpoint.
 - Record a short demo showing web context input, cube tap, and ESP32 display/status output.
 - Explain the small-model/small-system constraint: the primary live path uses a small Cohere model on Modal under the hackathon limit, and the local fallback keeps the cube reliable.
@@ -284,7 +296,7 @@ https://github.com/jpatel98/cube-of-tiny-dares
 
 To stay eligible, the public repo should include at least one Codex-attributed commit before submission, and this repo link should remain visible in the Space README.
 
-**Modal Awards:** this repo includes a Modal/Cohere dare generator and `/api/dare` can call it when `MODAL_DARE_URL` is configured. Do not claim full Modal eligibility until the Modal endpoint is deployed, the Hugging Face Space has the Modal URL configured, and the demo verifies that Modal is powering fresh dare generation with local fallback.
+**Modal Awards:** this repo includes a deployed Modal/Cohere dare generator, and the Hugging Face Space is configured to call it from `/api/dare`. Live verification returns `generation.provider: "modal"` and `generation.fallback: false`.
 
 **Tiny Titan:** not targeted for the current submission because the Cohere 7B model is above the Tiny Titan 4B limit.
 

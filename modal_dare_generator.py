@@ -85,10 +85,14 @@ Return JSON with exactly:
 
 
 def _extract_json(text: str) -> dict[str, Any]:
-    match = re.search(r"\{.*\}", text, flags=re.DOTALL)
-    if not match:
-        raise ValueError("no JSON object in model output")
-    return json.loads(match.group(0))
+    for match in re.finditer(r"\{[^{}]*\}", text, flags=re.DOTALL):
+        try:
+            parsed = json.loads(match.group(0))
+        except json.JSONDecodeError:
+            continue
+        if isinstance(parsed, dict):
+            return parsed
+    raise ValueError("no valid JSON object in model output")
 
 
 @app.function(

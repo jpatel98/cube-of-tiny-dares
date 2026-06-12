@@ -88,6 +88,32 @@ The firmware reads:
 - `cube.timer_seconds`
 - one AgentGotchi pet sprite
 
+## TLS / HTTPS
+
+The firmware makes three HTTPS connections:
+
+| Endpoint | Host | TLS verification |
+|---|---|---|
+| Dare endpoint (`/api/dare`) | Hugging Face Space / Modal | **Verified** against ISRG Root X1 (Let's Encrypt root) |
+| Geolocation | ipapi.co | Unverified — data is non-sensitive (city/lat/lon/timezone) |
+| Weather | api.open-meteo.com | Unverified — data is non-sensitive (temperature/conditions) |
+
+The ISRG Root X1 PEM is embedded in
+`firmware/src/tls_roots.h`.  It expires 2035-06-04; update it before then.
+
+### Development override
+
+If you are testing against a local endpoint that uses a self-signed
+certificate, add the following flag to your PlatformIO build:
+
+```ini
+; platformio.ini  [env:tiny_dares]
+build_flags = -DTINY_DARES_ALLOW_INSECURE_TLS
+```
+
+This disables certificate verification for the dare endpoint only and falls
+back to `setInsecure()`.  **Do not ship firmware with this flag set.**
+
 ## Build
 
 From this folder:

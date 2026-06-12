@@ -189,6 +189,13 @@ void loop() {
     fetchDare();
   }
 
+  // Shake the cube as an alternate trigger for requesting a dare.
+  // imuShakeDetected() already applies a 1200 ms cooldown internally, so
+  // this shares the same rate-limit path as the tap/button handler above.
+  if (imuShakeDetected()) {
+    fetchDare();
+  }
+
   audioTick();
   displayTick(g_view);
   delay(8);

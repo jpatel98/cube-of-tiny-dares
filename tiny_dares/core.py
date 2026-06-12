@@ -184,6 +184,32 @@ def generate_dare(
     available = [(score, dare) for score, dare in scored if dare.text not in recent_set]
     if available:
         scored = available
+    elif recent_set:
+        # All label-matched dares are recent; widen to any non-recent dare from
+        # the full bank (scored by best match) before allowing a repeat.
+        wider = [
+            (score, dare)
+            for score, dare in [(1, d) for d in DARE_BANK]
+            if dare.text not in recent_set
+        ]
+        # Re-score the wider pool using the same tag scoring so higher-scored
+        # matches still float to the top.
+        rescored_wider = []
+        for dare in DARE_BANK:
+            if dare.text in recent_set:
+                continue
+            s = 0
+            if dare.label == primary_tag:
+                s += 20
+            if dare.label in tags:
+                s += 10
+            if dare.label == "stuck" and "stuck" in tags and primary_tag == "stuck":
+                s += 3
+            if s == 0:
+                s = 1  # still eligible, just low priority
+            rescored_wider.append((s, dare))
+        if rescored_wider:
+            scored = rescored_wider
 
     best_score = max(score for score, _ in scored)
     best = [dare for score, dare in scored if score == best_score]

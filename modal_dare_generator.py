@@ -85,13 +85,36 @@ Return JSON with exactly:
 
 
 def _extract_json(text: str) -> dict[str, Any]:
-    for match in re.finditer(r"\{[^{}]*\}", text, flags=re.DOTALL):
+    stripped = text.strip()
+
+    # 1. Try the full stripped text directly.
+    try:
+        parsed = json.loads(stripped)
+        if isinstance(parsed, dict):
+            return parsed
+    except json.JSONDecodeError:
+        pass
+
+    # 2. Find the first '{' and last '}' and try that span (handles nested braces).
+    start = stripped.find("{")
+    end = stripped.rfind("}")
+    if start != -1 and end != -1 and end > start:
+        try:
+            parsed = json.loads(stripped[start : end + 1])
+            if isinstance(parsed, dict):
+                return parsed
+        except json.JSONDecodeError:
+            pass
+
+    # 3. Fall back to flat-object regex scan (original behaviour).
+    for match in re.finditer(r"\{[^{}]*\}", stripped, flags=re.DOTALL):
         try:
             parsed = json.loads(match.group(0))
         except json.JSONDecodeError:
             continue
         if isinstance(parsed, dict):
             return parsed
+
     raise ValueError("no valid JSON object in model output")
 
 

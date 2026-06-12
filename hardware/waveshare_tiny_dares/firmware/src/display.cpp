@@ -44,8 +44,17 @@ static uint32_t colorFromHex(const String& value, uint32_t fallback) {
 }
 
 static const lv_img_dsc_t* petForState(DareViewStatus status) {
-  (void)status;
-  return &agentgotchi_pet_happy;
+  // Map dare status to the sprite that best reflects the pet's mood at that
+  // moment.  The full PetMood system (pet.cpp) drives text-face logic and
+  // requires weather/time context that main.cpp does not maintain in v1; this
+  // simpler mapping uses only the application state, which is always available.
+  switch (status) {
+    case DARE_LOADING: return &agentgotchi_pet_excited;   // anticipating a dare
+    case DARE_READY:   return &agentgotchi_pet_blushing;  // just delivered one
+    case DARE_ERROR:   return &agentgotchi_pet_sleepy;    // something went wrong
+    case DARE_IDLE:
+    default:           return &agentgotchi_pet_happy;     // waiting peacefully
+  }
 }
 
 static const char* titleForStatus(DareViewStatus status) {
@@ -176,10 +185,26 @@ void displayTick(const DareViewState& s) {
   }
 
   uint32_t accent = colorFromHex(s.color, 0x8338EC);
-  uint32_t hash = (uint32_t)s.status ^
-                  (accent << 1) ^
-                  (uint32_t)s.display.length() << 8 ^
-                  (uint32_t)s.why.length() << 16;
+
+  // FNV-1a hash over the content that actually drives the labels, so that
+  // two dares with the same length but different text are never treated as
+  // identical (which would leave stale text on screen).
+  static constexpr uint32_t FNV_OFFSET = 0x811c9dc5u;
+  static constexpr uint32_t FNV_PRIME  = 0x01000193u;
+  auto fnv_mix = [](uint32_t h, const String& s) -> uint32_t {
+    for (uint32_t i = 0; i < s.length(); ++i) {
+      h ^= (uint8_t)s[i];
+      h *= FNV_PRIME;
+    }
+    return h;
+  };
+  uint32_t hash = FNV_OFFSET;
+  hash = fnv_mix(hash, s.display);
+  hash ^= (uint8_t)'\x01';  // separator
+  hash *= FNV_PRIME;
+  hash = fnv_mix(hash, s.why);
+  hash ^= (uint32_t)s.status * FNV_PRIME;
+  hash ^= accent;
 
   lv_obj_set_style_border_color(panel, lv_color_hex(accent), 0);
 

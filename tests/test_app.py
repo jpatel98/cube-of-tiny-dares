@@ -27,7 +27,10 @@ def test_api_dare_returns_cube_payload():
     assert payload["cube"]["timer_seconds"] == payload["dare"]["minutes"] * 60
     assert payload["generation"]["provider"] == "local"
     assert payload["generation"]["model"] == "tiny-dares-local-rule-bank"
+    # Modal was requested (default DARE_GENERATOR=modal) but MODAL_DARE_URL is
+    # not configured, so local was used without even attempting Modal.
     assert payload["generation"]["fallback"] is True
+    assert payload["generation"]["provider_status"] == "unconfigured"
     assert "Why" in payload["markdown"]
 
 
@@ -83,6 +86,7 @@ def test_api_uses_modal_generator_when_configured(monkeypatch):
         "provider": "modal",
         "model": "CohereLabs/c4ai-command-r7b-12-2024",
         "fallback": False,
+        "provider_status": "ok",
     }
 
 
@@ -111,6 +115,7 @@ def test_api_falls_back_when_modal_fails(monkeypatch):
     assert payload["generation"]["provider"] == "local"
     assert payload["generation"]["model"] == "tiny-dares-local-rule-bank"
     assert payload["generation"]["fallback"] is True
+    assert payload["generation"]["provider_status"] == "fallback"
 
 
 def test_api_local_mode_reports_non_fallback_local(monkeypatch):
@@ -128,3 +133,4 @@ def test_api_local_mode_reports_non_fallback_local(monkeypatch):
     payload = response.json()
     assert payload["generation"]["provider"] == "local"
     assert payload["generation"]["fallback"] is False
+    assert payload["generation"]["provider_status"] == "ok"

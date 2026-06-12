@@ -34,8 +34,10 @@ def fetch_modal_dare(
     mode: str,
     intensity: str,
     recent: list[str],
-    timeout: float = 60.0,
+    timeout: float | None = None,
 ) -> TinyDare:
+    if timeout is None:
+        timeout = float(os.environ.get("MODAL_DARE_TIMEOUT", "15"))
     url = os.environ.get("MODAL_DARE_URL", "").strip()
     if not url:
         raise ModalDareError("MODAL_DARE_URL is not configured")

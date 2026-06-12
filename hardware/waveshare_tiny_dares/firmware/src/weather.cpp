@@ -52,6 +52,13 @@ bool weatherFetch(const GeoLocation& geo, Weather& out) {
   if (!geo.resolved) return false;
 
   WiFiClientSecure client;
+  // SECURITY NOTE: certificate verification is disabled for the Open-Meteo
+  // weather call.  The data (temperature, weather code, sunrise/sunset) is
+  // public, non-sensitive, and used only for pet-mood display.  A MITM
+  // attacker could show a fake weather condition on the screen but cannot
+  // gain credentials or affect the dare endpoint.  Embedding the Open-Meteo
+  // CA chain (Cloudflare / DigiCert) for a display-only feed adds maintenance
+  // burden without a meaningful security benefit.  Accepted risk for v1.
   client.setInsecure();
   HTTPClient http;
   http.setTimeout(HTTP_TIMEOUT_MS);

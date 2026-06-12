@@ -7,7 +7,7 @@ from typing import Any
 import gradio as gr
 from gradio.themes import Soft
 from fastapi import FastAPI
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
 
 from tiny_dares.core import TinyDare, generate_dare, tiny_dare_to_markdown
 from tiny_dares.modal_client import ModalDareError, fetch_modal_dare, modal_configured
@@ -21,11 +21,16 @@ LOCAL_MODEL_ID = "tiny-dares-local-rule-bank"
 
 
 class DareApiRequest(BaseModel):
-    context: str = Field(default="", description="What is happening right now?")
-    mode: str = Field(default="builder", description="Dare mode/personality")
-    intensity: str = Field(default="medium", description="gentle, medium, or spicy")
-    recent: list[str] = Field(default_factory=list, description="Recently shown dare texts")
+    context: str = Field(default="", max_length=180, description="What is happening right now?")
+    mode: str = Field(default="builder", max_length=24, description="Dare mode/personality")
+    intensity: str = Field(default="medium", max_length=24, description="gentle, medium, or spicy")
+    recent: list[str] = Field(default_factory=list, max_length=12, description="Recently shown dare texts")
     seed: int | None = Field(default=None, description="Optional deterministic seed")
+
+    @field_validator("recent")
+    @classmethod
+    def cap_recent_items(cls, v: list[str]) -> list[str]:
+        return [item[:180] for item in v]
 
 
 def make_cube_payload(
@@ -72,9 +77,15 @@ def generate_dare_for_request(
                 "provider": "modal",
                 "model": COHERE_MODEL_ID,
                 "fallback": False,
+                "provider_status": "ok",
             }
         except ModalDareError:
-            pass
+            local_provider_status = "fallback"
+    elif generator in {"auto", "modal"}:
+        # Modal was requested but MODAL_DARE_URL is not configured.
+        local_provider_status = "unconfigured"
+    else:
+        local_provider_status = "ok"
 
     dare = generate_dare(
         request.context,
@@ -86,7 +97,8 @@ def generate_dare_for_request(
     return dare, {
         "provider": "local",
         "model": LOCAL_MODEL_ID,
-        "fallback": generator in {"auto", "modal"},
+        "fallback": local_provider_status in {"fallback", "unconfigured"},
+        "provider_status": local_provider_status,
     }
 
 

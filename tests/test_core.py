@@ -1,4 +1,6 @@
-from tiny_dares.core import classify_context, generate_dare, tiny_dare_to_markdown
+import pytest
+
+from tiny_dares.core import DARE_BANK, classify_context, generate_dare, tiny_dare_to_markdown
 
 
 def test_classifies_research_loop_context():
@@ -42,3 +44,28 @@ def test_markdown_is_demo_friendly():
     assert dare.text in markdown
     assert "Why" in markdown
     assert "Cube color" in markdown
+
+
+def test_generate_dare_widens_when_all_label_matched_dares_are_recent():
+    # Collect every dare whose label matches "research_loop" context.
+    research_dares = [d for d in DARE_BANK if d.label == "research_loop"]
+    # Mark all of them as recent.
+    recent = [d.text for d in research_dares]
+
+    dare = generate_dare(
+        "I keep researching models",
+        recent=recent,
+        seed=42,
+    )
+
+    # The result must not be one of the recent dares.
+    assert dare.text not in recent
+
+
+def test_generate_dare_empty_string_context():
+    # Empty context should not raise; should fall back to "stuck" label.
+    dare = generate_dare("", seed=1)
+
+    assert dare.text
+    assert dare.label  # has some label
+    assert dare.minutes >= 1

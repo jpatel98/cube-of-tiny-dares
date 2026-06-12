@@ -42,6 +42,11 @@ bool connectWifi() {
     return true;
   }
 
+  if (String(WIFI_SSID) == "YOUR_WIFI_SSID") {
+    Serial.println("WIFI_SSID is still placeholder. Update it before flashing.");
+    return false;
+  }
+
   WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
   Serial.print("Connecting to WiFi");
 

@@ -94,12 +94,18 @@ The firmware makes three HTTPS connections:
 
 | Endpoint | Host | TLS verification |
 |---|---|---|
-| Dare endpoint (`/api/dare`) | Hugging Face Space / Modal | **Verified** against ISRG Root X1 (Let's Encrypt root) |
+| Dare endpoint (`/api/dare`) | Hugging Face Space / Modal | **Verified** against Amazon Root CA 1 and ISRG Root X1 |
 | Geolocation | ipapi.co | Unverified — data is non-sensitive (city/lat/lon/timezone) |
 | Weather | api.open-meteo.com | Unverified — data is non-sensitive (temperature/conditions) |
 
-The ISRG Root X1 PEM is embedded in
-`firmware/src/tls_roots.h`.  It expires 2035-06-04; update it before then.
+The dare endpoint CA bundle is embedded in `firmware/src/tls_roots.h`.
+It includes:
+
+- Amazon Root CA 1 for the default Hugging Face Space endpoint. It expires
+  2038-01-17.
+- ISRG Root X1 for the Modal endpoint. It expires 2035-06-04.
+
+Update this bundle if Hugging Face or Modal rotate certificate roots.
 
 ### Development override
 

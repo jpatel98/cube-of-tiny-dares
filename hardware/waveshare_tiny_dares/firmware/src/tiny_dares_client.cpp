@@ -75,9 +75,10 @@ bool tinyDaresFetch(
     // WARNING: vulnerable to MITM. Do NOT use in production firmware.
     secure_client.setInsecure();
 #else
-    // Verify server certificate against ISRG Root X1 (Let's Encrypt root).
-    // This covers the Hugging Face Space and Modal endpoints.
-    secure_client.setCACert(ISRG_ROOT_X1_PEM);
+    // Verify server certificates against the roots used by the hosted dare
+    // endpoints: Amazon Root CA 1 for Hugging Face Space and ISRG Root X1 for
+    // Modal.
+    secure_client.setCACert(DARE_ROOT_CA_BUNDLE_PEM);
 #endif
     began = http.begin(secure_client, url);
   } else {

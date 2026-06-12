@@ -26,7 +26,6 @@ image = (
         "torch==2.5.1",
         "git+https://github.com/huggingface/transformers.git",
         "accelerate==1.2.1",
-        "bitsandbytes>=0.46.1",
         "sentencepiece==0.2.0",
     )
 )
@@ -51,10 +50,9 @@ def _load_model():
         return _tokenizer, _model
 
     import torch
-    from transformers import AutoTokenizer, BitsAndBytesConfig, Cohere2ForCausalLM
+    from transformers import AutoTokenizer, Cohere2ForCausalLM
 
     token = os.environ.get("HF_TOKEN")
-    quantization = BitsAndBytesConfig(load_in_4bit=True)
     _tokenizer = AutoTokenizer.from_pretrained(
         MODEL_ID,
         revision=MODEL_REVISION,
@@ -67,8 +65,7 @@ def _load_model():
         token=token,
         trust_remote_code=True,
         device_map="auto",
-        torch_dtype=torch.float16,
-        quantization_config=quantization,
+        dtype=torch.float16,
     )
     return _tokenizer, _model
 

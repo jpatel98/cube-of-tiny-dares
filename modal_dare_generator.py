@@ -51,7 +51,7 @@ def _load_model():
         return _tokenizer, _model
 
     import torch
-    from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
+    from transformers import AutoTokenizer, BitsAndBytesConfig, Cohere2ForCausalLM
 
     token = os.environ.get("HF_TOKEN")
     quantization = BitsAndBytesConfig(load_in_4bit=True)
@@ -61,7 +61,7 @@ def _load_model():
         token=token,
         trust_remote_code=True,
     )
-    _model = AutoModelForCausalLM.from_pretrained(
+    _model = Cohere2ForCausalLM.from_pretrained(
         MODEL_ID,
         revision=MODEL_REVISION,
         token=token,

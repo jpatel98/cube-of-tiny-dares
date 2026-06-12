@@ -19,6 +19,7 @@ app = modal.App("cube-of-tiny-dares-cohere")
 
 image = (
     modal.Image.debian_slim(python_version="3.11")
+    .apt_install("git")
     .uv_pip_install(
         "fastapi[standard]==0.115.6",
         "pydantic==2.10.4",

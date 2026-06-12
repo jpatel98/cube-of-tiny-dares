@@ -103,11 +103,10 @@ def _extract_json(text: str) -> dict[str, Any]:
 def generate_dare(data: DareRequest) -> dict[str, Any]:
     tokenizer, model = _load_model()
     prompt = _prompt(data)
-    inputs = tokenizer(prompt, return_tensors="pt").to(model.device)
-    input_ids = inputs["input_ids"]
+    input_ids = tokenizer.encode(prompt, return_tensors="pt").to(model.device)
 
     output_ids = model.generate(
-        **inputs,
+        input_ids=input_ids,
         max_new_tokens=180,
         do_sample=True,
         temperature=0.7,

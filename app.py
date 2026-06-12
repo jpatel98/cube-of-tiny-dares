@@ -1,6 +1,10 @@
 from __future__ import annotations
 
 import os
+import base64
+import html
+from functools import lru_cache
+from pathlib import Path
 from typing import Any
 
 import gradio as gr
@@ -17,6 +21,14 @@ APP_TAGLINE = "Tap the cube. Get one tiny dare. Move."
 DEMO_HOOK = "context → tap → one tiny dare → move"
 COHERE_MODEL_ID = "CohereLabs/c4ai-command-r7b-12-2024"
 LOCAL_MODEL_ID = "tiny-dares-local-rule-bank"
+PET_AVATAR_PATH = (
+    Path(__file__).parent
+    / "hardware"
+    / "waveshare_tiny_dares"
+    / "assets"
+    / "embedded"
+    / "pet-happy.png"
+)
 
 
 class DareApiRequest(BaseModel):
@@ -90,12 +102,39 @@ def generate_dare_for_request(
 
 
 def _cube_card(dare: TinyDare) -> str:
+    avatar = _pet_avatar_data_uri()
+    dare_text = html.escape(dare.text)
+    minutes = html.escape(str(dare.minutes))
+    avatar_img = (
+        f'<img src="{avatar}" alt="Tiny cube pet" class="dare-avatar-img" />'
+        if avatar
+        else '<span class="dare-avatar-fallback">TD</span>'
+    )
     return f"""
-<div class="cube-card" style="border-color:{dare.color}; box-shadow: 0 0 28px {dare.color}55;">
-  <div class="cube-emoji">{dare.emoji}</div>
-  <div class="cube-title">{dare.text}</div>
+<div class="dare-card">
+  <div class="dare-avatar" style="--accent:{dare.color};">
+    {avatar_img}
+    <span class="dare-check">✓</span>
+  </div>
+  <div class="dare-body">
+    <div class="dare-kicker">Here's your dare.</div>
+    <div class="dare-title">{dare_text}</div>
+    <div class="dare-rule"></div>
+    <div class="dare-time">
+      <span class="dare-time-icon">◷</span>
+      <span>Do it for {minutes} minutes.</span>
+    </div>
+  </div>
 </div>
 """
+
+
+@lru_cache(maxsize=1)
+def _pet_avatar_data_uri() -> str:
+    if not PET_AVATAR_PATH.exists():
+        return ""
+    encoded = base64.b64encode(PET_AVATAR_PATH.read_bytes()).decode("ascii")
+    return f"data:image/png;base64,{encoded}"
 
 
 def gradio_tap(
@@ -122,70 +161,185 @@ def gradio_tap(
 
 
 CSS = """
-body { background: #09090f; }
-.gradio-container { max-width: 980px !important; }
+body {
+  background:
+    radial-gradient(circle at 50% 16%, rgba(116, 76, 255, 0.14), transparent 30%),
+    radial-gradient(circle at 72% 58%, rgba(255, 255, 255, 0.05), transparent 24%),
+    #15151d;
+}
+.gradio-container {
+  max-width: 940px !important;
+  background: transparent !important;
+}
 #app-shell {
-  border: 1px solid #26263a;
-  border-radius: 12px;
-  padding: 18px;
-  background: #11111a;
+  padding: 72px 18px 42px;
+  background: transparent;
 }
-#hero {
-  text-align: center;
-  padding: 16px 4px 12px 4px;
-  margin-bottom: 8px;
+#control-stack {
+  max-width: 760px;
+  margin: 0 auto;
 }
-#hero h1 {
-  font-size: 2.6rem;
-  line-height: 1.0;
-  margin-bottom: 0.25rem;
+#loop-input textarea {
+  min-height: 86px !important;
+  border-radius: 8px !important;
+  border: 1px solid rgba(184, 184, 202, 0.42) !important;
+  border-left-color: #8b5cf6 !important;
+  background: rgba(24, 24, 34, 0.74) !important;
+  color: #f7f7fb !important;
+  font-size: 1.08rem !important;
+  padding: 22px 24px !important;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.02);
 }
-#hero p {
-  color: #b7b7c9;
+#loop-input textarea::placeholder {
+  color: #acacba !important;
+}
+#loop-input label,
+#loop-input .label-wrap {
+  display: none !important;
+}
+.example-line {
+  color: #a3a3af;
   font-size: 1.08rem;
-  margin-top: 0;
+  margin: 20px 0 46px;
 }
-#hero small {
-  color: #8e8ea4;
-  font-size: 0.92rem;
+#tap-button {
+  margin-bottom: 52px;
 }
-.cube-card {
-  border: 2px solid #8338ec;
-  border-radius: 8px;
-  padding: 30px;
-  background: radial-gradient(circle at top left, #22223b 0%, #101018 42%, #08080d 100%);
-  min-height: 260px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-}
-.cube-emoji { font-size: 4.4rem; margin-bottom: 14px; }
-.cube-title {
-  font-size: 1.95rem;
-  line-height: 1.12;
-  font-weight: 800;
-  max-width: 720px;
-}
-.cube-why {
-  color: #c9c9d8;
-  margin-top: 14px;
-  font-size: 1.05rem;
-  max-width: 680px;
-}
-#cube-frame { border-radius: 8px; border: 1px solid #2d2d44; }
 #tap-button button {
-  font-size: 1.45rem;
-  font-weight: 900;
-  min-height: 84px;
-  border-radius: 10px;
+  min-height: 118px;
+  border-radius: 8px;
+  border: 1px solid rgba(166, 128, 255, 0.46);
+  background: linear-gradient(135deg, #8b3ffc 0%, #7d34ff 46%, #6e37dc 100%);
+  box-shadow: 0 18px 44px rgba(98, 55, 210, 0.35);
+  color: #ffffff;
+  font-size: 1.7rem;
+  font-weight: 850;
+  letter-spacing: 0;
 }
-.small-note,
-.control-note {
-  color: #a3a3b8;
-  font-size: 0.95rem;
-  line-height: 1.3;
+#cube-frame {
+  max-width: 760px;
+  margin: 0 auto;
+}
+.dare-card {
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 8px;
+  padding: 30px 40px 30px;
+  background: linear-gradient(145deg, rgba(17, 17, 24, 0.96), rgba(12, 12, 18, 0.84));
+  min-height: 246px;
+  display: flex;
+  gap: 26px;
+  align-items: flex-start;
+  box-shadow: 0 28px 70px rgba(0, 0, 0, 0.24);
+}
+.dare-avatar {
+  position: relative;
+  flex: 0 0 72px;
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: #fff8f6;
+  border: 2px solid rgba(255, 255, 255, 0.78);
+  overflow: visible;
+}
+.dare-avatar-img {
+  width: 58px;
+  height: 58px;
+  object-fit: contain;
+  image-rendering: pixelated;
+}
+.dare-avatar-fallback {
+  color: #ff75ad;
+  font-size: 0.8rem;
+  font-weight: 800;
+}
+.dare-check {
+  position: absolute;
+  right: -3px;
+  bottom: 7px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: #20aeea;
+  border: 2px solid #ffffff;
+  color: #ffffff;
+  font-size: 0.78rem;
+  font-weight: 900;
+}
+.dare-body {
+  flex: 1;
+  min-width: 0;
+}
+.dare-kicker {
+  color: #f7f7fb;
+  font-size: 1.58rem;
+  line-height: 1.2;
+  font-weight: 800;
+  margin: 8px 0 28px;
+}
+.dare-title {
+  color: #f3f3f8;
+  font-size: 1.78rem;
+  line-height: 1.35;
+  font-weight: 450;
+  max-width: 600px;
+  overflow-wrap: anywhere;
+}
+.dare-rule {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.11);
+  margin: 30px 0 22px;
+}
+.dare-time {
+  color: #a6a6b1;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  font-size: 1.18rem;
+}
+.dare-time-icon {
+  color: #9b5cff;
+  font-size: 1.4rem;
+  line-height: 1;
+}
+@media (max-width: 720px) {
+  #app-shell {
+    padding: 38px 12px 28px;
+  }
+  .example-line {
+    margin-bottom: 32px;
+    font-size: 0.98rem;
+  }
+  #tap-button button {
+    min-height: 92px;
+    font-size: 1.18rem;
+  }
+  .dare-card {
+    padding: 24px 22px;
+    gap: 18px;
+  }
+  .dare-avatar {
+    flex-basis: 58px;
+    width: 58px;
+    height: 58px;
+  }
+  .dare-avatar-img {
+    width: 46px;
+    height: 46px;
+  }
+  .dare-kicker {
+    font-size: 1.25rem;
+    margin-bottom: 18px;
+  }
+  .dare-title {
+    font-size: 1.38rem;
+  }
+  .dare-time {
+    font-size: 1rem;
+  }
 }
 """
 
@@ -195,42 +349,33 @@ def build_demo() -> gr.Blocks:
         recent_state = gr.State([])
 
         with gr.Column(elem_id="app-shell"):
-            gr.HTML(
-                f"""
-                <div id="hero">
-                  <h1>🎲 {APP_TITLE}</h1>
-                  <p>{APP_TAGLINE}</p>
-                  <small>{DEMO_HOOK}</small>
-                </div>
-                """
-            )
-
-            context = gr.Textbox(
-                label="What loop are you in right now?",
-                placeholder="e.g. I keep researching models and can't pick a direction",
-                lines=4,
-            )
-            with gr.Row():
+            with gr.Column(elem_id="control-stack"):
+                context = gr.Textbox(
+                    label="What loop are you in right now?",
+                    placeholder="What loop are you in right now?",
+                    lines=2,
+                    elem_id="loop-input",
+                )
+                gr.HTML(
+                    '<p class="example-line">e.g. "I keep researching models and can’t pick a direction."</p>'
+                )
                 mode = gr.Dropdown(
                     choices=["builder", "hackathon", "chaos goblin", "gentle"],
                     value="builder",
                     label="Mode",
-                    scale=1,
+                    visible=False,
                 )
                 intensity = gr.Dropdown(
                     choices=["gentle", "medium", "spicy"],
                     value="medium",
                     label="Intensity",
-                    scale=1,
+                    visible=False,
                 )
-            tap = gr.Button(
-                "⚡ TAP CUBE, GET ONE DARE, MOVE ⚡",
-                variant="primary",
-                elem_id="tap-button",
-            )
-            gr.Markdown(
-                "<p class='control-note'>One tap = one dare. No dashboard, no accounts, no planning.</p>"
-            )
+                tap = gr.Button(
+                    "TAP CUBE, GET ONE DARE, MOVE. 🎲",
+                    variant="primary",
+                    elem_id="tap-button",
+                )
 
             cube = gr.HTML(
                 _cube_card(
@@ -244,21 +389,6 @@ def build_demo() -> gr.Blocks:
                     )
                 ),
                 elem_id="cube-frame",
-            )
-
-            gr.Markdown(
-                "<span class='small-note'>Hardware path: ESP32 button can POST to <code>/api/dare</code> and read <code>cube.display</code> plus <code>cube.color</code>.</span>"
-            )
-
-            gr.Markdown("#### Try these starter loops:")
-            gr.Examples(
-                examples=[
-                    ["I keep researching models and can't pick a direction", "builder", "medium"],
-                    ["I want to add login and a dashboard before the demo", "hackathon", "spicy"],
-                    ["The deploy failed and I am randomly changing stuff", "builder", "medium"],
-                    ["I finished a tiny fix but don't know what to do next", "gentle", "gentle"],
-                ],
-                inputs=[context, mode, intensity],
             )
 
         tap.click(

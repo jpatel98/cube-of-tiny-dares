@@ -103,18 +103,11 @@ def _extract_json(text: str) -> dict[str, Any]:
 def generate_dare(data: DareRequest) -> dict[str, Any]:
     tokenizer, model = _load_model()
     prompt = _prompt(data)
-    messages = [{"role": "user", "content": prompt}]
-    if hasattr(tokenizer, "apply_chat_template"):
-        input_ids = tokenizer.apply_chat_template(
-            messages,
-            add_generation_prompt=True,
-            return_tensors="pt",
-        ).to(model.device)
-    else:
-        input_ids = tokenizer(prompt, return_tensors="pt").input_ids.to(model.device)
+    inputs = tokenizer(prompt, return_tensors="pt").to(model.device)
+    input_ids = inputs["input_ids"]
 
     output_ids = model.generate(
-        input_ids,
+        **inputs,
         max_new_tokens=180,
         do_sample=True,
         temperature=0.7,

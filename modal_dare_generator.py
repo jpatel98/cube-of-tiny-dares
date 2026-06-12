@@ -23,7 +23,7 @@ image = (
         "fastapi[standard]==0.115.6",
         "pydantic==2.10.4",
         "torch==2.5.1",
-        "transformers==4.47.1",
+        "git+https://github.com/huggingface/transformers.git",
         "accelerate==1.2.1",
         "bitsandbytes==0.45.0",
         "sentencepiece==0.2.0",

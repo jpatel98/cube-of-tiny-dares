@@ -26,7 +26,7 @@ image = (
         "torch==2.5.1",
         "git+https://github.com/huggingface/transformers.git",
         "accelerate==1.2.1",
-        "bitsandbytes==0.45.0",
+        "bitsandbytes>=0.46.1",
         "sentencepiece==0.2.0",
     )
 )

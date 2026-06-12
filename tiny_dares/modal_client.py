@@ -34,7 +34,7 @@ def fetch_modal_dare(
     mode: str,
     intensity: str,
     recent: list[str],
-    timeout: float = 18.0,
+    timeout: float = 60.0,
 ) -> TinyDare:
     url = os.environ.get("MODAL_DARE_URL", "").strip()
     if not url:
